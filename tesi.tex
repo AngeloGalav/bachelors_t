@@ -1,0 +1,121 @@
+\documentclass[12pt,a4paper,openright,twoside]{report}
+\usepackage[italian,english]{babel}
+\usepackage{fancyhdr}
+\usepackage{indentfirst}
+\usepackage{newlfont}
+\usepackage{pdfpages}
+\usepackage{colortbl}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{subcaption}
+\usepackage[hidelinks]{hyperref}
+\usepackage{hhline}
+\definecolor{background}{HTML}{EEEEEE}
+\lstdefinelanguage{json}{
+    basicstyle=\footnotesize\ttfamily,
+    numbers=left,
+    numberstyle=\ttfamily,
+    stepnumber=1,
+    numbersep=8pt,
+    showstringspaces=false,
+    breaklines=true,
+    backgroundcolor=\color{background}
+}
+\graphicspath{ {./images/} }
+\oddsidemargin=30pt \evensidemargin=20pt
+\pagestyle{fancy}\addtolength{\headwidth}{20pt}\setlength{\headheight}{15pt}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection \ #1}{}}
+\rhead[\fancyplain{}{\bfseries\leftmark}]{\fancyplain{}{\bfseries\thepage}}
+\cfoot{}
+\linespread{1.3}
+\begin{document}
+\includepdf[pages=-]{titlepage.pdf}
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\begin{titlepage}
+	\setcounter{page}{3}
+	\thispagestyle{empty}
+	\topmargin=6.5cm
+	\raggedleft
+	\large
+	\em
+	Dedica qui,\linebreak
+	Dedica qui 2.\linebreak
+	\newpage
+	\clearpage{\pagestyle{empty}\cleardoublepage}
+\end{titlepage}
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\selectlanguage{italian}
+\begin{abstract}
+	\setcounter{page}{2}
+	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit amet lacus nulla. Proin quis nibh vel risus rutrum cursus quis ac dui. Integer nec mollis diam. Sed eget nisl sit amet sem maximus faucibus vel a sem. In hac habitasse platea dictumst. Vivamus a commodo ante. Aliquam erat volutpat. Suspendisse eu porttitor sem, nec porta mi. Etiam et risus euismod, gravida justo nec, pulvinar nulla. Pellentesque finibus tristique mauris, quis molestie nibh consequat nec.
+
+Praesent pretium finibus turpis, sit amet sodales sem facilisis non. Nullam nisi eros, convallis in diam in, faucibus maximus justo. Mauris eu auctor erat, et tristique libero. Praesent pretium gravida magna, a faucibus neque posuere sit amet. Etiam tellus lacus, viverra sit amet dignissim in, eleifend vel diam. In hac habitasse platea dictumst. Nam ornare est nunc, ac interdum turpis rhoncus vitae. Aenean id neque diam. Nunc ac accumsan lectus. Ut vehicula luctus risus eget dignissim. Quisque sed justo non erat vestibulum consectetur vel a diam.
+
+Fusce malesuada magna in odio vehicula, vel malesuada leo congue. Duis nec diam nunc. In hac habitasse platea dictumst. Vivamus vitae urna dignissim urna pharetra consequat. Aenean aliquam non sem et dictum. Proin sagittis tellus ex, a bibendum erat ornare ut. Nunc hendrerit maximus luctus. Etiam consequat vel velit sit amet ullamcorper. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum vulputate dapibus orci eget laoreet. Sed non purus quis enim condimentum ultricies dapibus a tellus.
+
+Aliquam erat volutpat. Sed non urna a quam pretium euismod viverra sed nisl. Integer egestas enim in nulla faucibus consequat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum placerat quam nec ultrices vulputate. Sed sagittis quis leo ut ullamcorper. Nam id dui ac orci accumsan lobortis eget eu nunc. Aenean a tempus mauris, nec accumsan sem. In imperdiet nisl ante, non cursus elit ornare vehicula. In posuere vulputate augue vitae efficitur. Suspendisse eu aliquet tellus.
+
+Vivamus sed maximus ex, ac placerat est. Sed accumsan laoreet nunc. Phasellus finibus mauris velit, eu finibus tellus ullamcorper a. Ut lobortis sagittis nisl, eget eleifend dolor viverra et. Phasellus vitae pellentesque nibh. Ut quis posuere nisl. Donec mattis rhoncus orci vitae vestibulum. Pellentesque tempus at libero ut placerat. Nulla facilisi.
+\end{abstract}
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\selectlanguage{italian}
+\tableofcontents
+\addtocontents{toc}{\protect\thispagestyle{empty}}
+\listoffigures
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\listoftables
+\clearpage{\pagestyle{empty}\cleardoublepage}
+
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\pagenumbering{arabic}
+\chapter{Introduzione}
+\lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
+
+\section{Background}
+ok
+\section{Struttura del documento}
+ok
+
+\chapter{Titolo del capitolo}
+\lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
+ok
+
+\section{Titolo della sezione}
+\label{chap:physical_memory}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit amet lacus nulla. Proin quis nibh vel risus rutrum cursus quis ac dui. Integer nec mollis diam. Sed eget nisl sit amet sem maximus faucibus vel a sem. In hac habitasse platea dictumst. Vivamus a commodo ante. Aliquam erat volutpat. Suspendisse eu porttitor sem, nec porta mi. Etiam et risus euismod, gravida justo nec, pulvinar nulla. Pellentesque finibus tristique mauris, quis molestie nibh consequat nec.
+
+Praesent pretium finibus turpis, sit amet sodales sem facilisis non. Nullam nisi eros, convallis in diam in, faucibus maximus justo. Mauris eu auctor erat, et tristique libero. Praesent pretium gravida magna, a faucibus neque posuere sit amet. Etiam tellus lacus, viverra sit amet dignissim in, eleifend vel diam. In hac habitasse platea dictumst. Nam ornare est nunc, ac interdum turpis rhoncus vitae. Aenean id neque diam. Nunc ac accumsan lectus. Ut vehicula luctus risus eget dignissim. Quisque sed justo non erat vestibulum consectetur vel a diam.
+
+Fusce malesuada magna in odio vehicula, vel malesuada leo congue. Duis nec diam nunc. In hac habitasse platea dictumst. Vivamus vitae urna dignissim urna pharetra consequat. Aenean aliquam non sem et dictum. Proin sagittis tellus ex, a bibendum erat ornare ut. Nunc hendrerit maximus luctus. Etiam consequat vel velit sit amet ullamcorper. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum vulputate dapibus orci eget laoreet. Sed non purus quis enim condimentum ultricies dapibus a tellus.
+
+Aliquam erat volutpat. Sed non urna a quam pretium euismod viverra sed nisl. Integer egestas enim in nulla faucibus consequat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum placerat quam nec ultrices vulputate. Sed sagittis quis leo ut ullamcorper. Nam id dui ac orci accumsan lobortis eget eu nunc. Aenean a tempus mauris, nec accumsan sem. In imperdiet nisl ante, non cursus elit ornare vehicula. In posuere vulputate augue vitae efficitur. Suspendisse eu aliquet tellus.
+
+Vivamus sed maximus ex, ac placerat est. Sed accumsan laoreet nunc. Phasellus finibus mauris velit, eu finibus tellus ullamcorper a. Ut lobortis sagittis nisl, eget eleifend dolor viverra et. Phasellus vitae pellentesque nibh. Ut quis posuere nisl. Donec mattis rhoncus orci vitae vestibulum. Pellentesque tempus at libero ut placerat. Nulla facilisi.
+
+\begin{thebibliography}{99}
+	\addcontentsline{toc}{chapter}{Bibliography}
+	\bibitem{linux_kernel}
+	Linux's Contributors,
+	\textit{Linux Kernel},
+	\url{https://www.kernel.org/}.
+
+	\bibitem{gpl3}
+	Free Software Foundation, Inc.,
+	\textit{GNU General Public License Version 3},
+	\url{https://www.gnu.org/licenses/gpl-3.0.en.html}.
+
+\end{thebibliography}
+
+\chapter*{Ringraziamenti}
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit amet lacus nulla. Proin quis nibh vel risus rutrum cursus quis ac dui. Integer nec mollis diam. Sed eget nisl sit amet sem maximus faucibus vel a sem. In hac habitasse platea dictumst. Vivamus a commodo ante. Aliquam erat volutpat. Suspendisse eu porttitor sem, nec porta mi. Etiam et risus euismod, gravida justo nec, pulvinar nulla. Pellentesque finibus tristique mauris, quis molestie nibh consequat nec.
+
+Praesent pretium finibus turpis, sit amet sodales sem facilisis non. Nullam nisi eros, convallis in diam in, faucibus maximus justo. Mauris eu auctor erat, et tristique libero. Praesent pretium gravida magna, a faucibus neque posuere sit amet. Etiam tellus lacus, viverra sit amet dignissim in, eleifend vel diam. In hac habitasse platea dictumst. Nam ornare est nunc, ac interdum turpis rhoncus vitae. Aenean id neque diam. Nunc ac accumsan lectus. Ut vehicula luctus risus eget dignissim. Quisque sed justo non erat vestibulum consectetur vel a diam.
+
+Fusce malesuada magna in odio vehicula, vel malesuada leo congue. Duis nec diam nunc. In hac habitasse platea dictumst. Vivamus vitae urna dignissim urna pharetra consequat. Aenean aliquam non sem et dictum. Proin sagittis tellus ex, a bibendum erat ornare ut. Nunc hendrerit maximus luctus. Etiam consequat vel velit sit amet ullamcorper. Interdum et malesuada fames ac ante ipsum primis in faucibus. Vestibulum vulputate dapibus orci eget laoreet. Sed non purus quis enim condimentum ultricies dapibus a tellus.
+
+Aliquam erat volutpat. Sed non urna a quam pretium euismod viverra sed nisl. Integer egestas enim in nulla faucibus consequat. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum placerat quam nec ultrices vulputate. Sed sagittis quis leo ut ullamcorper. Nam id dui ac orci accumsan lobortis eget eu nunc. Aenean a tempus mauris, nec accumsan sem. In imperdiet nisl ante, non cursus elit ornare vehicula. In posuere vulputate augue vitae efficitur. Suspendisse eu aliquet tellus.
+
+Vivamus sed maximus ex, ac placerat est. Sed accumsan laoreet nunc. Phasellus finibus mauris velit, eu finibus tellus ullamcorper a. Ut lobortis sagittis nisl, eget eleifend dolor viverra et. Phasellus vitae pellentesque nibh. Ut quis posuere nisl. Donec mattis rhoncus orci vitae vestibulum. Pellentesque tempus at libero ut placerat. Nulla facilisi.
+
+\end{document}
