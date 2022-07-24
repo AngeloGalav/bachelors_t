@@ -1,2 +1,2 @@
- # bachers_t
+ # bachelors_t
  ## The repository of my Bachelor of Science thesis
