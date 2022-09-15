@@ -1,1 +1,17 @@
-Ancora devo scrivere.
+L'organizzazione topologica dell'infrastruttura è probabilmente una delle caratteristiche più importanti dell'intero sistema. 
+Il capitolo corrente sarà dedicato ad esporre le componenti principali, 
+partendo inizialmente da una visione più generale. Gli ultimi paragrafi sono dedicati alla comunicazione tra ciascun componente, e all'implementazione di essi. 
+
+\section{Reverse Proxy}
+Il reverse proxy rappresenta il cuore pulsante dell'intero sistema di autorizzazione. Il compito di questo componente è di
+ mediare la comunicazione tra client e server: ogni richiesta che viene fatta da un utente deve prima passare per il reverse proxy. 
+ In questo modo, al client apparirà di comunicare direttamente con il server, nonostante le richieste siano dirette al proxy \textcolor{blue}{[<- cambiare questa frase]}. 
+ Il reverse proxy   Si interfaccia con ciascun componente del sistema, e in ba  
+
+\section{Componente decisionale}
+\textcolor{blue}{[Migliorare coesione dei concetti]}
+Open Policy Agent è un motore di policy open-source, che si occupa principalmente di definire e imporre le politiche di autorizzazione attraverso lo stack una applicazione.
+Grazie a questo sistema, il processo di decision making nella fase di autorizzazione viene spostato dall'applicazione ad una compotente esterna. 
+\newline
+Le politiche vengono speicificate attraverso un linguaggio dichiarativo di alto livello chiamato \textit{Rego}.
+Attraverso Rego, le richieste di autorizzazzione vengono 
