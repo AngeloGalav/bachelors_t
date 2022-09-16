@@ -1,17 +1,43 @@
-L'organizzazione topologica dell'infrastruttura è probabilmente una delle caratteristiche più importanti dell'intero sistema. 
-Il capitolo corrente sarà dedicato ad esporre le componenti principali, 
-partendo inizialmente da una visione più generale. Gli ultimi paragrafi sono dedicati alla comunicazione tra ciascun componente, e all'implementazione di essi. 
+Durante la progettazione di un sistema di autorizzazione, è necessario considerare alcuni parametri fondamentali che ci permettono di valutarlo 
+nel contesto in cui ci si trova.
+Quelli che hanno influito maggiormente sulle scelte progettuali sono state la \textit{versatilità} (la capacità di interfacciarsi con sistemi di 
+funzionalità e struttura diversa)
+e la \textit{manutenibilità} (la facilità di apportare modifiche a sistema realizzato).
+\\ Attraverso la divisione in più componenti, modificare le regole d'accesso non richiede un'alterazione del codice del
+complesso. Inoltre, la separabilità totale dal servizio che si intende autorizzare permette di facilitare la compatibilità con altre tecnologie.   
 
-\section{Reverse Proxy}
-Il reverse proxy rappresenta il cuore pulsante dell'intero sistema di autorizzazione. Il compito di questo componente è di
- mediare la comunicazione tra client e server: ogni richiesta che viene fatta da un utente deve prima passare per il reverse proxy. 
- In questo modo, al client apparirà di comunicare direttamente con il server, nonostante le richieste siano dirette al proxy \textcolor{blue}{[<- cambiare questa frase]}. 
- Il reverse proxy   Si interfaccia con ciascun componente del sistema, e in ba  
+\section{Componenti}
 
-\section{Componente decisionale}
-\textcolor{blue}{[Migliorare coesione dei concetti]}
-Open Policy Agent è un motore di policy open-source, che si occupa principalmente di definire e imporre le politiche di autorizzazione attraverso lo stack una applicazione.
-Grazie a questo sistema, il processo di decision making nella fase di autorizzazione viene spostato dall'applicazione ad una compotente esterna. 
-\newline
-Le politiche vengono speicificate attraverso un linguaggio dichiarativo di alto livello chiamato \textit{Rego}.
-Attraverso Rego, le richieste di autorizzazzione vengono 
+L'architettura dell'infrastruttura presenta uno scheletro formato da tre componenti di principali: il \textit{reverse proxy}, il \textit{sistema di politiche} e il \textit{service server}. 
+Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tuttavia solo le prime due influenzano il processo di autorizzazione. 
+
+\subsection{Reverse Proxy}
+Il reverse proxy rappresenta l'entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
+mediare la comunicazione tra client e service server: ogni richiesta che viene fatta da un utente dovrà prima attraversare il reverse proxy. 
+In questo modo, al client apparirà di comunicare direttamente con il server, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
+\\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene espresso effettivamente il concetto di autorizzazione. 
+Infatti, il reverse proxy inoltra o ignora le richieste al service server, basandosi sull'output di un sistema di politiche.  
+ 
+\subsection{Sistema di politiche}
+Il sistema di politiche è la parte che determina come la richiesta dovrà essere gestita. 
+\\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, che devono essere propriamente formattate per essere comprese correttamente. 
+Dopodiché, le confronta con dati quali politiche e permessi, ai quali ha accesso diretto.
+Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito.  
+
+\subsection{Service server}
+Con service server si intende il servizio che sfrutta il sistema di autorizzazione. Come tale, il suo ciclo d'esecuzione consiste nel gestire 
+le richieste provenienti dagli utenti tramite
+ il reverse proxy e formulare una risposta.
+Questa viene indirezionata al mittente iniziale, senza che sia filtrata o analizzata, ma attraversando comunque il proxy.
+
+\begin{figure}[h]
+    \includegraphics[width=13cm]{topologia.png}
+    \centering
+    \caption{Rappresentazione concettuale del sistema}
+    \label{topologia}
+\end{figure}
+
+\section{Topologia finale}
+In base a quanto è stato esposto nei paragrafi precendenti, si ottiene una struttura topologica simile a quanto mostrato nella Figura \ref{topologia}. 
+I numeri su ogni freccia indicano l'ordinamento temporale delle trasmissioni di dati tra ogni elemento. 
+\\Ciascun componente è interpretabile come un processo separato in esecuzione sullo stesso server o su server diversi. 
