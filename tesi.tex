@@ -11,8 +11,9 @@
 \usepackage{subcaption}
 \usepackage[hidelinks]{hyperref}
 \usepackage{hhline}
+\renewcommand{\lstlistingname}{Codice}
 \definecolor{background}{HTML}{EEEEEE}
-\lstdefinelanguage{json}{
+\lstdefinelanguage{nginx}{
     basicstyle=\footnotesize\ttfamily,
     numbers=left,
     numberstyle=\ttfamily,
@@ -82,6 +83,18 @@ Vivamus sed maximus ex, ac placerat est. Sed accumsan laoreet nunc. Phasellus fi
 \chapter{Implementazione}
 \lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
 \input{chapters/chapter3.tex}
+
+\chapter{Gestione dell'autenticazione}
+\lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
+\input{chapters/chapter4.tex}
+
+\chapter{Interfacciamento con Storm-Tape API}
+\lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
+\input{chapters/chapter5.tex}
+
+\chapter{Conclusioni e sviluppi futuri}
+\lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
+\input{chapters/chapter6.tex}
 
 \begin{thebibliography}{99}
 	\addcontentsline{toc}{chapter}{Bibliography}

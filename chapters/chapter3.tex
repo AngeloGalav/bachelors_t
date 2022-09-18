@@ -1,1 +1,37 @@
-Ancora devo scrivere.
+bho.
+
+\section{Software stack}
+\subsection{OpenPolicyAgent}
+\subsection{NGINX}
+\subsection{Docker}
+\section{Implementazioni delle componenti}
+\subsection{Reverse proxy}
+\subsection{Sistema di politiche}
+\subsection{Service server}
+Come descritto nel Capitolo 2, con service server si intende un servizio qualsiasi che sfrutta l'infrastruttura di autorizzazione. 
+Siccome questa fase del progetto si focalizza sullo sviluppo corretto delle componenti dedicate 
+al filtraggio delle richieste, il service server è dato da una API abbastanza elementare. \\
+L'API in questione ritorna 200 se si accede correttamente all'endpoint \texttt{/operation}, 
+mentre una richiesta a \texttt{/operation/image\_request} permette lo scaricamento di 
+un'immagine. Siccome queste locazioni presentano il prefisso "operation", il loro accesso comporta l'uso 
+del sistema di autorizzazione.
+
+Per implementare quando appena descritto, si è utilizzato nuovamente il software NGINX, 
+sfruttando la sua modalità webserver.
+\lstset{language=nginx}
+\begin{lstlisting}[caption={sda},captionpos=b,label=nginx_web]
+    # invia 200 se si esegue l'operazione con successo
+    location /operation {
+        return 200;
+    }
+
+    # simula la richiesta di una risorsa al server
+    location /operation/image_request {
+        try_files $uri /test.jpg;
+    }
+\end{lstlisting}
+Questa scelta ha facilitato lo sviluppo, permettendo di definire una API funzionante in poche righe di codice.  
+
+
+
+\section{Testing}
