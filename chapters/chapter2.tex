@@ -1,22 +1,33 @@
 Durante la progettazione di un sistema di autorizzazione, è necessario considerare alcuni parametri fondamentali che ci permettono di valutarlo 
 nel contesto in cui ci si trova.
-Quelli che hanno influito maggiormente sulle scelte progettuali sono state la \textit{versatilità} (la capacità di interfacciarsi con sistemi di 
-funzionalità e struttura diversa)
-e la \textit{manutenibilità} (la facilità di apportare modifiche a sistema realizzato).
-\\ Attraverso la divisione in più componenti, modificare le regole d'accesso non richiede un'alterazione del codice del
-complesso. Inoltre, la separabilità totale dal servizio che si intende proteggere permette di facilitare la compatibilità con altre tecnologie.   
+\\ Quelli che hanno influito maggiormente sulle scelte progettuali sono stati:
+\begin{itemize}
+    \item la versatilità, cioé la capacità di interfacciarsi con sistemi di 
+    funzionalità e struttura diversa.
+    \item la manutenibilità, ovvero la facilità di apportare modifiche a sistema realizzato.
+\end{itemize}
+La prima è garantita attraverso la divisione in più componenti, così che modificare le regole d'accesso non richiede 
+un'alterazione del codice del complesso. 
+\\ La seconda è ottenuta tramite la separabilità totale dal servizio che si intende proteggere,
+ facilitandone la compatibilità con altre tecnologie.   
 
-\section{Componenti}
+\section{Componenti principali}
 
-L'architettura dell'infrastruttura presenta uno scheletro formato da tre componenti di principali: il \textit{reverse proxy}, il \textit{sistema di politiche} e il \textit{service server}. 
+L'architettura dell'infrastruttura presenta uno scheletro formato da tre componenti di principali: 
+\begin{itemize}
+    \item il \textit{reverse proxy}
+    \item il \textit{sistema di politiche}
+    \item il \textit{service server}
+\end{itemize}
 Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tuttavia solo le prime due influenzano il processo di autorizzazione. 
 
 \subsection{Reverse Proxy}
 Il reverse proxy rappresenta l'entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
-mediare la comunicazione tra client e service server: ogni richiesta che viene fatta da un utente dovrà prima attraversare il reverse proxy. 
-In questo modo, al client apparirà di comunicare direttamente con il server, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
-\\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene espresso effettivamente il concetto di autorizzazione. 
-Infatti, il reverse proxy inoltra o ignora le richieste al service server, basandosi sull'output di un sistema di politiche.  
+mediare la comunicazione tra client e service server: ogni richiesta che viene fatta da un utente è obbligata ad attraversare 
+il reverse proxy prima di giungere al server. 
+L'attraversamento del proxy è trasparente: al client apparirà di comunicare direttamente con il server, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
+\\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene effettivamente espresso il concetto di autorizzazione. 
+Infatti, il reverse proxy inoltra o ignora le richieste al service server, basandosi sull'output del sistema di politiche.  
  
 \subsection{Sistema di politiche}
 Il sistema di politiche è la parte che determina come la richiesta dovrà essere gestita. 
@@ -39,5 +50,5 @@ Questa viene indirezionata al mittente iniziale, senza che sia filtrata o analiz
 
 \section{Topologia finale}
 In base a quanto è stato esposto nei paragrafi precendenti, si ottiene una struttura topologica simile a quanto mostrato nella Figura \ref{topologia}. 
-I numeri su ogni freccia indicano l'ordinamento temporale delle trasmissioni di dati tra ogni elemento. 
+I numeri su ogni freccia dei flussi dati indicano la sequenza temporale delle trasmissioni di dati tra gli elementi. 
 \\Ciascun componente è interpretabile come un processo separato in esecuzione sullo stesso server o su server diversi. 

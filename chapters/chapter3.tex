@@ -1,10 +1,18 @@
 La fase di implementazione delle basi del sistema rimane sicuramente la parte più corposa dello sviluppo del progetto.
-\textcolor{blue}{[CAMBIARE E ESPANDERE.]}
+\\ In questo capitolo verranno discussi in dettaglio gli strumenti e le tecniche
+che hanno permesso la realizzazione dell'infrastruttura. Particolare attenzione sarà posta nella descrizione 
+nella descrizione della parte operativa, attraverso l'illustrazione di frammenti di codice particolarmente significativi. 
 
 \section{Software stack}
 Con \textit{software stack} si intende l'insieme di sottosistemi software che permettono di realizzare una piattaforma completa.
 Questi lavorano assieme per consentire la corretta esecuzione di un'applicazione oppure, come nel caso in questione, il 
 funzionamento di un sistema.
+Lo stack dell'infrastruttura è composto dai seguenti moduli, che saranno descritti nei paragrafi seguenti:
+\begin{itemize}
+    \item OpenPolicyAgent
+    \item NGINX
+    \item Docker
+\end{itemize}
 Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolgere il proprio compito. 
 
 
@@ -30,6 +38,9 @@ di interrogazione \textit{Datalog}.
 Attraverso Rego, le regole si esprimono come delle asserzione sui dati mantenuti da OPA.
 Il codice dedicato alle politiche diventa così molto conciso rispetto ad un loro equivalente in 
 linguaggio imperativo. 
+\\ OpenPolicyAgent è il software che alimenta \textcolor{blue}{[non so se il termine sia corretto]} interamente il sistema di politiche. Oltra a formulare una decisione,
+ infatti, gestisce la ricezione delle informazioni e la trasmissione del risultatos.  
+
 
 \subsection{NGINX}
 \textit{NGINX} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e del 
@@ -62,6 +73,7 @@ controllo degli accessi si basa sui diritti associati al ruolo dell'utente.
 Altre tecniche di controllo degli accessi possono essere implementate cambiando le politiche. Nonostante ciò, 
 questo approccio risulta quello più consono alla dimostrazione delle capacità di OpenPolicyAgent.
 \\ La descrizione dei ruoli e dei permessi associati ad essi è mantenuta in file in formato JSON, descritti come nel Codice \ref*{opa_roles}.
+Ad ogni ruolo sono associate le operazioni che l'utente può svolgere.
 \lstset{language=nginx}
 \begin{lstlisting}[caption={Descrizione dei ruoli},captionpos=b,label=opa_roles]
     "roles" : {
@@ -80,6 +92,34 @@ questo approccio risulta quello più consono alla dimostrazione delle capacità 
         "/banned" : []
     }
 \end{lstlisting}
+Come già citato in precedenza, le politiche in OpenPolicyAgent sono definite attraverso il linguaggio Rego. L'unità base di una policy scritta in questo linguaggio è data 
+dalla regola, che viene definita tramite una testa e un corpo contenuto in delle parentesi graffe. 
+\begin{lstlisting}[caption={Policy in linguaggio Rego},captionpos=b,label=opa_policy]
+    import input.http_method as http_method   
+    default allow = false #abilita il default deny
+
+    allow {
+        check_permission
+    }
+
+    check_permission {
+        all_permissions := data.roles[input.role][_]
+        all_permissions == input.operation
+    }
+\end{lstlisting}
+Il corpo di una regola contiene delle assegnazioni, operazioni logiche, oppure riferimenti ad altre regole. Una regola assume valore "true" 
+solo se tutte le clausole interne sono eseguibili e risultano vere, altrimenti le viene assegnata il valore "undefined". Regole aventi stessa testa ma corpo diverso presentano come valore finale 
+il risultato dato dall'OR logico fra i risultati di ciascuna di queste, con "undefined" che assume la stessa semantica di "false". 
+Le regole possono essere annidate facendo sì che il significato di una regola dipenda dal valore di un'altre, in modo da formare una politica strutturata in un'organizzazione gerarchia. 
+\\ La semplice politica mostrata nel Codice \ref*{opa_policy} è sufficiente ad implementare 
+un controllo degli accessi basato su RBAC. 
+La riga 2 permette di simulare un comportamento "default deny", facendo in modo che il valore di \texttt{allow} sia uguale a "false" 
+nella situazione in cui le regole con tale testa siano "undefined".  \\ 
+I confronti con collezioni di dati sono esprimibili in maniera concisa, come avviene nelle righe 9 e 10 del Codice \ref*{opa_policy}.
+La variabile \texttt{all\_permission} contiene tutti i permessi del ruolo specificato nella query in input. 
+Se l'operazione svolta dall'utente risulta in questa collezione, allora il valore di \texttt{check\_permission} sarà "true". 
+\\ La risposta restituita alla componente che ha interrogato OPA consiste in un file in formato JSON contenente il valore 
+delle regole alle radici dell'albero gerarchio, oppure di tutte le regole che hanno portato le radici ad avere un valore undefined. 
 
 
 \subsection{Reverse proxy}
@@ -174,13 +214,14 @@ JSON comprensibili da OPA.
 
 
 \subsection{Service server}
-Come descritto nella Sezione \ref*{serv_server}, con service server si intende un servizio qualsiasi che sfrutta l'infrastruttura di autorizzazione. 
+Come descritto nella Sezione \ref*{serv_server}, con service server si intende un servizio qualsiasi che sfrutta 
+l'infrastruttura di autorizzazione. 
 Siccome questa fase del progetto si focalizza sullo sviluppo corretto delle componenti dedicate 
-al filtraggio delle richieste, il service server è dato da una API abbastanza elementare. \\
+al filtraggio delle richieste, il service server è dato da una API relativamente elementare. \\
 L'API in questione ritorna una risposta generica con Status Code 200 se si accede correttamente all'endpoint \texttt{/operation}, 
 mentre una richiesta a \texttt{/operation/image\_request} permette lo scaricamento di 
 un'immagine. Siccome queste locazioni presentano il prefisso "operation", il loro accesso comporta l'uso 
-del sistema di autorizzazione.
+del sistema di autorizzazione.  
 
 La modalità web server di NGINX permette di implementare quanto appena descritto.
 \lstset{language=nginx}
@@ -195,15 +236,15 @@ La modalità web server di NGINX permette di implementare quanto appena descritt
         try_files $uri /test.jpg;
     }
 \end{lstlisting}
-La cluasola \texttt{return} inviare al client uno specifico HTTP Status Code,  
+La cluasola \texttt{return} invia al client uno specifico HTTP Status Code,  
 Questa scelta ha facilitato lo sviluppo, permettendo di definire in poche righe di codice una API funzionante e adatta ai requisiti,  
 come si può vedere nel Codice \ref*{nginx_web}.
 
 \section{Cifratura SSL/TLS}
-Non è affatto raro che un sistema di autorizzaione richieda delle informazioni sensibili riguardo un utente per attuare il controllo 
+Spesso un sistema di autorizzaione richiede delle informazioni sensibili riguardo un utente per attuare il controllo 
 degli accessi. 
-Per proteggerli da possibili intercettazioni è necessario che la comunicazione fra il servizio e l'utente venga cifrata. 
-\\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimettrica. Il suo funzionamento necessita 
+Per proteggere il flusso dati da possibili intercettazioni è necessario che la comunicazione fra il servizio e l'utente venga cifrata. 
+\\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmettrica. Il suo funzionamento necessita 
 dei certificati X.509, e in questo modo garantiscono che la chiave pubblica di un host appartenga effettivamente ad esso. 
 \\ Nel caso del progetto di questa tesi, solamente la connesione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno
  all'infrastruttura possiede accesso diretto alle componenti.
@@ -220,14 +261,16 @@ NGINX supporta le connessioni SSL/TLS attraverso alcune configurazioni esplicite
 \end{lstlisting}
 L'impostazione del canale protetto attraverso NGINX avviene inserendo il parametro \texttt{ssl} nella definizione 
 dei socket in ascolto del server. Il percorso del certificato pubblico e della chiave privata devono essere specificati 
-nelle direttive \texttt{ssl\_certificate} e \texttt{ssl\_certificate\_key} rispettivamente. \\
+rispettivamente nelle direttive \texttt{ssl\_certificate} e \texttt{ssl\_certificate\_key}. \\
 Il Codice \ref*{nginx_ssl} mostra il setup della protezione SSL/TLS all'interno del reverse proxy del sistema di autorizzazione.
-I certificati attualmente sono dedicati esclusivamente al testing, quindi non validi. Nonostante ciò, la loro sostituizione con una 
-controparte ufficialmente verificata rimane un processo banale.  
+Allo stato attuale del progetto, i certificati sono dedicati esclusivamente al testing, quindi non sono validi. Va da sé che 
+la sostituzione dei certificati stessi
+con una controparte ufficialmente verificata è un processo banale.  
 
 
 \section{Testing}
-L'intera infrastruttura si avvia lanciando i container di Docker Compose attraverso il comando \texttt{docker-compose up}.
-Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenti nel proprio header le informazioni necessarie per formulare una query.
+L'intera infrastruttura prende vita avviando i container di Docker Compose attraverso il comando \texttt{docker-compose up}.
+\\ Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenti nel proprio header le informazioni necessarie per formulare una query.
 \\ \textit{cURL} è il software principale usanto in ambito di testing, siccome permette di inviare dati attraverso 
-numerosi protocolli, tra cui anche HTTP. \textcolor{blue}{[aggiungere altro?]}
+numerosi protocolli, tra cui anche HTTP. 
+\\ Questo metodologia è stata applicata in continuità durante lo sviluppo dell'intero progetto. 
