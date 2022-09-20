@@ -1,37 +1,233 @@
-bho.
+La fase di implementazione delle basi del sistema rimane sicuramente la parte più corposa dello sviluppo del progetto.
+\textcolor{blue}{[CAMBIARE E ESPANDERE.]}
 
 \section{Software stack}
+Con \textit{software stack} si intende l'insieme di sottosistemi software che permettono di realizzare una piattaforma completa.
+Questi lavorano assieme per consentire la corretta esecuzione di un'applicazione oppure, come nel caso in questione, il 
+funzionamento di un sistema.
+Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolgere il proprio compito. 
+
+
 \subsection{OpenPolicyAgent}
+\textit{OpenPolicyAgent} (abbreviato in OPA) è un software open source che permette di separare il processo di decision-making 
+durante l'autorizzazione dall'applicazione rigorosa delle politiche.
+\\ Consideriamo un servizio che richiede di stabilire se un utente possiede dei determinati diritti d'accesso.
+OPA permette di gestire il problema decisionale analizzando le informazioni su di esso, ricevute attraverso un'interrogazione da parte del servizio. 
+Il carico computazionale della risoluzione del problema viene dunque spostato ad un altro componente, che potrà essere interrogato da più 
+agenti, senza la necessità di codice ridondante. 
+
+\begin{figure}[h]
+    \includegraphics[height=6cm]{opa-service.jpg}
+    \centering
+    \caption{Meccanismo di operazione di OpenPolicyAgent}
+    \label{OPAWork}
+\end{figure} 
+La Figura \ref*{OPAWork} mostra in modo schematico la gestione tipica di una richiesta: un servizio invia un'interrogazione e OPA valuta i dati a sua disposizione per formulare una decisione e restituirla. 
+Le informazioni della richiesta sono definiti in formato JSON, tuttavia sono strutturati in modo totalmente arbitrario. 
+\\ Le politiche devono essere rappresentate attraverso il linguaggio dichiarativo 
+\textit{Rego}, la cui sintassi si ispira al linguaggio 
+di interrogazione \textit{Datalog}. 
+Attraverso Rego, le regole si esprimono come delle asserzione sui dati mantenuti da OPA.
+Il codice dedicato alle politiche diventa così molto conciso rispetto ad un loro equivalente in 
+linguaggio imperativo. 
+
 \subsection{NGINX}
+\textit{NGINX} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e del 
+service server. 
+È conosciuto per la sua stabilità e il suo consumo di risorse molto basso; contrariamente ai server tradizionali,  
+non usa moltecipli thread per gestire le richieste, ma si limita ad un'architettura asincrona a eventi. Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, e si
+ limita alla creazione di un file con estensione ".config" con le clausole necessarie. 
+ \\ NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli esterni attraverso il linguaggio \textit{NJS}, 
+ che consiste in una versione di JavaScript modificata. 
+
 \subsection{Docker}
+\textit{Docker} è una piattaforma che sfrutta la virtualizzazione a livello del sistema operativo per incorporare software 
+in unità isolate chiamate \textit{container}, includendo anche le sue dipendenze. L'obiettivo di un container è quello di 
+facilitare la distribuzione di un applicativo software, permettendone l'esecuzione a prescindere dal sistema operativo 
+in uso dall'utente. 
+\\ Docker fornisce lo strumento \textit{Compose}, che permette di definire delle applicazioni singole a più container, 
+che comunicano fra loro su una rete privata. In questo modo è possibile creare facilmente un ambiente di sviluppo avente 
+un funzionamento e struttura analoghe al sistema finale. Le caratteristiche dei container e i collegamenti fra questi vengono definite tramite un file di configurazione in YAML. 
+
+
 \section{Implementazioni delle componenti}
-\subsection{Reverse proxy}
+L'intera struttura del sistema è definita attraverso il file di configurazione di Docker Compose. Ciò implica che ogni 
+elemento è stato virtualizzato attraverso un container, che svolge il suo compito come un processo separato. 
+\\ La topologia delle relazioni rispecchia quanto mostrato nella Figura \ref*{topologia}. 
+
+
 \subsection{Sistema di politiche}
+Il sistema di autorizzazione usa un approccio \textit{Role-Based Access Control} (abbreviato in RBAC), in cui il 
+controllo degli accessi si basa sui diritti associati al ruolo dell'utente. 
+Altre tecniche di controllo degli accessi possono essere implementate cambiando le politiche. Nonostante ciò, 
+questo approccio risulta quello più consono alla dimostrazione delle capacità di OpenPolicyAgent.
+\\ La descrizione dei ruoli e dei permessi associati ad essi è mantenuta in file in formato JSON, descritti come nel Codice \ref*{opa_roles}.
+\lstset{language=nginx}
+\begin{lstlisting}[caption={Descrizione dei ruoli},captionpos=b,label=opa_roles]
+    "roles" : {
+        "/dev" : [
+            "retrieve", 
+            "submit"
+        ],
+        "/analyst" : [ "retrieve" ],
+        "/admin" : [ 
+            "retrieve", 
+            "submit",
+            "report",
+            "image_request"
+        ],
+        "/moderator" : [ "report" ], 
+        "/banned" : []
+    }
+\end{lstlisting}
+
+
+\subsection{Reverse proxy}
+La scelta di inserire NGINX nel software stack è stata decisamente influenzata dagli strumenti che possiede per la realizzazione 
+del reverse proxy. 
+\\ Tra questi, NGINX fornisce la clausola \texttt{auth\_request} per fare appello a un sistema di decision-making in modo da valutare
+i diritti d'accesso. 
+
+\lstset{language=nginx}
+\begin{lstlisting}[caption={Frammento di codice del reverse proxy},captionpos=b,label=nginx_rp]
+    # operazione protetta
+    location /operation {
+        # appello al server di autorizzazione
+        auth_request /authz; 
+        proxy_pass http://service_server_web;
+    }
+
+    # verifica l'autorizzazione
+    location /authz {
+        internal;
+        proxy_set_header Authorization $http_authorization;
+        proxy_set_header Content-Length "";
+
+        # passiamo gli header settati
+        proxy_pass_request_headers on; 
+
+        # sposta la gestione al modulo NJS  
+        js_content auth_engine.authorize_operation;
+    }
+
+    # locazione usata per l'invio dei dati a OPA
+    location /_opa {
+        internal;
+        proxy_pass_request_headers on; 
+        proxy_pass http://opa:8181/;
+    }
+\end{lstlisting}
+Una qualsiasi richiesta che accede ad un endpoint avente prefisso \texttt{/operation} induce il reverse proxy a controllare 
+se l'utente possiede effettivamente l'autorizzazione ad accedere a tale servizio. Possiamo interpretare la locazione \texttt{/operation}
+come quella associata alle risorse protette, che richiedono un controllo dell'accesso. 
+\\ Attraverso il comando \texttt{auth\_request /authz},
+il flusso d'esecuzione passa immediatamente al codice associato all'endpoint \texttt{/authz}. 
+In questa fase, la richiesta HTTP viene condotta nel modulo NJS dedicato alla creazione della query e alla trasmissione di essa verso il sistema di politiche.
+La riga 18 del Codice \ref*{nginx_rp} invoca questa funzionalità. \\
+Il modulo NJS contiene il metodo \texttt{authorize\_operation}, che raccoglie le informazioni dagli header 
+e le trascrive in formato JSON.
+I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoint \texttt{/\_opa}, 
+ associato alla comunicazione con il sistema di politiche.
+\lstset{language=nginx}
+\begin{lstlisting}[caption={Frammento di codice del modulo NJS},captionpos=b,label=NJS]
+    function authorize_operation(r) {
+
+        // dati da inviare a OPA
+        let opa_data = {
+            "operation" : r.headersIn["X-Operation"],
+            "role" : "/" + r.headersIn["X-Role"]
+        }
+    
+        // pacchetto HTTP da inviare ad OPA
+        var opts = {
+            method: "POST",
+            body: JSON.stringify(opa_data)
+        };
+        
+        // gestisce la risposta di OPA
+        r.subrequest("/_opa", opts, function(opa_res) {
+    
+            var body = JSON.parse(opa_res.responseText);
+            
+            // se body non c'e' o allow e' 
+            // uguale a false, ritorna forbidden (403)
+            if (!body || !body.allow) {
+                r.return(403);
+                return;
+            }
+
+            // altrimenti, ritorna il codice dato da OPA 
+            // (che e' 200 in caso non vi siano errori)
+            r.return(opa_res.status);
+        });
+    
+    }
+\end{lstlisting}
+In base alla risposta del sistema di politche, il reverse proxy inoltrerà il pacchetto originale al service server con la keyword \texttt{proxy\_pass}, 
+oppure terminerà la gestione della richiesta.
+La parola chiave \texttt{internal} alle righe 10 e 23 del Codice \ref{nginx_rp}  garantisce che le locazioni 
+associate all'interrogazione di OpenPolicyAgent possano essere accedute esclusivamente da sottorichieste interne al reverse proxy. 
+\\ L'uso di un modulo esterno è necessario siccome la clausola \texttt{auth\_request} scarta il campo body della 
+richiesta HTTP. Ciò implica che non è possibile inviare una richiesta contenente i dati della query nel suo corpo.
+Dunque, è essenziale l'aggiunta di un passo aggiuntivo che converta gli header HTTP in dati in formato
+JSON comprensibili da OPA. 
+
+
 \subsection{Service server}
-Come descritto nel Capitolo 2, con service server si intende un servizio qualsiasi che sfrutta l'infrastruttura di autorizzazione. 
+Come descritto nella Sezione \ref*{serv_server}, con service server si intende un servizio qualsiasi che sfrutta l'infrastruttura di autorizzazione. 
 Siccome questa fase del progetto si focalizza sullo sviluppo corretto delle componenti dedicate 
 al filtraggio delle richieste, il service server è dato da una API abbastanza elementare. \\
-L'API in questione ritorna 200 se si accede correttamente all'endpoint \texttt{/operation}, 
+L'API in questione ritorna una risposta generica con Status Code 200 se si accede correttamente all'endpoint \texttt{/operation}, 
 mentre una richiesta a \texttt{/operation/image\_request} permette lo scaricamento di 
 un'immagine. Siccome queste locazioni presentano il prefisso "operation", il loro accesso comporta l'uso 
 del sistema di autorizzazione.
 
-Per implementare quando appena descritto, si è utilizzato nuovamente il software NGINX, 
-sfruttando la sua modalità webserver.
+La modalità web server di NGINX permette di implementare quanto appena descritto.
 \lstset{language=nginx}
-\begin{lstlisting}[caption={sda},captionpos=b,label=nginx_web]
+\begin{lstlisting}[caption={Frammento di codice del service server},captionpos=b,label=nginx_web]
     # invia 200 se si esegue l'operazione con successo
     location /operation {
         return 200;
     }
 
-    # simula la richiesta di una risorsa al server
+    # manda un'immagine al client
     location /operation/image_request {
         try_files $uri /test.jpg;
     }
 \end{lstlisting}
-Questa scelta ha facilitato lo sviluppo, permettendo di definire una API funzionante in poche righe di codice.  
+La cluasola \texttt{return} inviare al client uno specifico HTTP Status Code,  
+Questa scelta ha facilitato lo sviluppo, permettendo di definire in poche righe di codice una API funzionante e adatta ai requisiti,  
+come si può vedere nel Codice \ref*{nginx_web}.
 
+\section{Cifratura SSL/TLS}
+Non è affatto raro che un sistema di autorizzaione richieda delle informazioni sensibili riguardo un utente per attuare il controllo 
+degli accessi. 
+Per proteggerli da possibili intercettazioni è necessario che la comunicazione fra il servizio e l'utente venga cifrata. 
+\\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimettrica. Il suo funzionamento necessita 
+dei certificati X.509, e in questo modo garantiscono che la chiave pubblica di un host appartenga effettivamente ad esso. 
+\\ Nel caso del progetto di questa tesi, solamente la connesione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno
+ all'infrastruttura possiede accesso diretto alle componenti.
+NGINX supporta le connessioni SSL/TLS attraverso alcune configurazioni esplicite.
+
+\begin{lstlisting}[caption={Configurazione di SSL},captionpos=b,label=nginx_ssl]
+    server {
+        listen 443 ssl;
+        server_name servicecnaf.test.example;
+        
+        ssl_certificate     certs/star.test.example.cert.pem;
+        ssl_certificate_key certs/star.test.example.key.pem;
+        ...
+\end{lstlisting}
+L'impostazione del canale protetto attraverso NGINX avviene inserendo il parametro \texttt{ssl} nella definizione 
+dei socket in ascolto del server. Il percorso del certificato pubblico e della chiave privata devono essere specificati 
+nelle direttive \texttt{ssl\_certificate} e \texttt{ssl\_certificate\_key} rispettivamente. \\
+Il Codice \ref*{nginx_ssl} mostra il setup della protezione SSL/TLS all'interno del reverse proxy del sistema di autorizzazione.
+I certificati attualmente sono dedicati esclusivamente al testing, quindi non validi. Nonostante ciò, la loro sostituizione con una 
+controparte ufficialmente verificata rimane un processo banale.  
 
 
 \section{Testing}
+L'intera infrastruttura si avvia lanciando i container di Docker Compose attraverso il comando \texttt{docker-compose up}.
+Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenti nel proprio header le informazioni necessarie per formulare una query.
+\\ \textit{cURL} è il software principale usanto in ambito di testing, siccome permette di inviare dati attraverso 
+numerosi protocolli, tra cui anche HTTP. \textcolor{blue}{[aggiungere altro?]}
