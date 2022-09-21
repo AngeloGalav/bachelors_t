@@ -3,9 +3,29 @@ sta nel creazione un sistema che supportasse
 un nuova tecnica di autenticazione e che fosse retrocompatibile con il metodo usato in precedenza dall'INFN.  
 Queste due tecniche consistono rispettivamente nell'autenticazione basata su token e su certificati.    
 \\ In questo capitolo si analizzeranno i due metodi diversi di autenticazione e si implementerà la gestione 
-dei dati da loro provenienti.
+dei dati provenienti da loro.
 
 \section{JSON Web Token}
-
+\textcolor{blue}{[Cos'è un JWT? Com'è fatto?]}
+\textcolor{blue}{[Quali sono le modifiche fatte al sistema? ]}
+I \textit{JSON Web Token} (abbrev. in JWT) rappresentano uno standard per la definizione di un metodo 
+compatto e sicuro per la trasmissione di dati in formato JSON.  
+\\ Nella loro forma più diffusa, i JWT sono costituiti da tre parti:
+\begin{itemize}
+    \item L'\textit{header} contiene   
+    \item Il \textit{payload}
+    \item La \textit{signature}
+\end{itemize}
+Queste tre campi sono separati da dei punti, quindi un tipico JWT è nella forma:
+\\ \centerline{\texttt{xxxxx.yyyyy.zzzzz}}
+\\
+OpenPolicyAgent supporta delle funzioni built-in per la decodifica e la verifica dei JWT.
+con le regole usate per l'implementazione del RBAC nel Codice \ref*{opa_policy}. 
 
 \section{Certificati VOMS Proxy}
+Nell'ambito del calcolo distribuito, le organizzazioni virtuali (abbrev. VO) rappresentano una collezione di gruppi 
+di invidui sparsi nel mondo che definite da una serie di regole riguardo la condivisione delle risorse.
+\\ Il Virtual Organization Membership Service (abbrev. VOMS), è un servizio per il controllo degli accessi 
+nei servizi distribuiti, che implementa
+un database per ogni organizzazione virtuale (di fatto per ogni esperimento) all’interno del
+quale sono mantenuti i dati relativi ad ogni singolo membro/utente

@@ -1,5 +1,48 @@
+Nei capitoli precedenti è stato illustrato l'intero processo di realizzazione del sistema, partendo dalla
+progettazione architetturale e evolvendolo gradualmente tramite l'aggiunta di nuove feature, che includono il supporto a 
+differenti tecnologie di autenticazione e alla comunicazione crittografata. 
+\\ Il Capitolo 6 ha mostrato la facilità 
+con cui questo sistema riesce ad integrarsi con un servizio già esistente, senza richiedere una 
+riprogrammazione totale delle componenti, ma modificando le policy esistenti e il modulo dedicato alla formattazione dei dati. 
+\\ Questo capitolo è dedicato alle considerazioni suscitate dall'osservazione del progetto realizzato. 
+
 \section{Sviluppi futuri}
-\dots
-In particolare, OpenPolicyAgent è uno strumento molto affascinante e con questo progetto abbiamo 
-appena scalfito la superficie delle possibilità che offre.  
-\dots
+Il progetto esposto in questa tesi fornisce una buona base per la creazione di un sistema di autorizzazione 
+in cui il carico del processo di decision-making è affidato a una componente esterna.  
+\\ Nonostante ciò, sono molte le possibilità per cui quanto è stato creato può essere esteso e migliorato. 
+
+\subsection{Modifica delle policy dall'esterno}
+OpenPolicyAgent è uno strumento molto affascinante e con questo progetto abbiamo 
+appena scalfito la superficie delle possibilità che offre. Uno degli aspetti particolarmente interessanti 
+sarebbe lo sviluppo di un'estensione del sistema per consentire la modifica delle policy connettendosi da una 
+rete esterna all'infrastruttura. Come è stato illustrato nel Capitolo 3, infatti, OPA fornisce un'API che espone degli 
+endpoint CRUD, in modo da permettere la modifica, l'inserimento e l'eliminazione delle regole "on the fly".
+Un'estensione del genere abiliterebbe un qualsiasi utente privilegiato a modificare le regole con estrema
+ convenienza.   
+\\ Seguendo questo pricipio, una possibile implementazone potrebbe impiegare l'uso di policy di OPA per applicare un controllo degli accessi 
+riguardo la modifica delle policy stesse, il che rappresenterebbe un caso di studio decisamente curioso. 
+
+\subsection{Migliorie nella gestione dei VOMS Proxy}
+Nel Capitolo 4 si è trattato di come il sistema gestisce i certificati VOMS Proxy. 
+Come citato, il modulo al momento disponibile per la validazione dei VOMS Proxy necessita dell'uso di OpenResty, 
+ossia una versione modificata da terze 
+parti che include il supporto a estensioni programmate nel linguaggio Lua. Pertanto, non è supportata direttamente dagli sviluppatori di NGINX. 
+\textcolor{blue}{[perché è negativo questo?]}
+\\  Una possibile miglioramento dell'infrastruttura si potrebbe trovare nella reimplementazione dei moduli VOMS, 
+traducendoli in programmi equivalenti scritti in NJS. Infatti, quest'ultimo è il linguaggio supportato ufficialmente per 
+l'estensione di NGINX con funzionalità personalizzate.  
+\\ In questo modo il reverse proxy 
+risulterebbe totalmente affidato all'implementazione standard NGINX.
+
+\section{Osservazioni finali}
+Considerando che l'obiettivo di un Proof-of-Concept consiste nel dimostrare la realizzabilità 
+di un sistema, mi ritengo soddisfatto del risultato finale ottenuto. L'infrastruttura ricalca l'obiettivo 
+posto nell'introduzione della tesi, permettendo di svolgere un controllo degli accessi e interfacciandosi 
+con poche modifiche ad altri servizi.  
+\\ Ho deciso di dedicare queste ultime righe per parlare della mia esperienza personale nella concretizzazione del progetto. 
+Grazie a questa tesi, sono stato esposto al mondo della computazione distribuita, che prima mi era totalmente estraneo. 
+È stato molto interessante osservare i meccanismi che coinvolgono l'esecuzione di batch job, e non dimenticherò mai 
+la quantità di rumore prodotta dai pod.   
+\\ Più di tutto, questa tesi ha permesso di mettere alla prova le mie competenze. 
+Non mi sarei mai accorto della mole di ricerca necessaria per la 
+\\ Dunque, per concludere, ritengo che questa esperienza sia stata fondamentale per il mio percorso da studente di Informatica.  

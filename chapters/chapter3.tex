@@ -17,7 +17,7 @@ Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolger
 
 
 \subsection{OpenPolicyAgent}
-\textit{OpenPolicyAgent} (abbreviato in OPA) è un software open source che permette di separare il processo di decision-making 
+\textit{OpenPolicyAgent} (abbrev. in OPA) è un software open source che permette di separare il processo di decision-making 
 durante l'autorizzazione dall'applicazione rigorosa delle politiche.
 \\ Consideriamo un servizio che richiede di stabilire se un utente possiede dei determinati diritti d'accesso.
 OPA permette di gestire il problema decisionale analizzando le informazioni su di esso, ricevute attraverso un'interrogazione da parte del servizio. 
@@ -38,8 +38,10 @@ di interrogazione \textit{Datalog}.
 Attraverso Rego, le regole si esprimono come delle asserzione sui dati mantenuti da OPA.
 Il codice dedicato alle politiche diventa così molto conciso rispetto ad un loro equivalente in 
 linguaggio imperativo. 
+\\ Un'altra feature molto interessante di questo software sta nella funzionalità dell'API della pol. In questo modo, una politica può essere modificata o inserita 
+in qualsiasi momento, tramite una richiesta all'API. Solamente chi ha accesso alla rete interna può usufruire di questa funzione. 
 \\ OpenPolicyAgent è il software che alimenta \textcolor{blue}{[non so se il termine sia corretto]} interamente il sistema di politiche. Oltra a formulare una decisione,
- infatti, gestisce la ricezione delle informazioni e la trasmissione del risultatos.  
+ infatti, gestisce la ricezione delle informazioni e la trasmissione del risultato.  
 
 
 \subsection{NGINX}
@@ -68,7 +70,7 @@ elemento è stato virtualizzato attraverso un container, che svolge il suo compi
 
 
 \subsection{Sistema di politiche}
-Il sistema di autorizzazione usa un approccio \textit{Role-Based Access Control} (abbreviato in RBAC), in cui il 
+Il sistema di autorizzazione usa un approccio \textit{Role-Based Access Control} (abbrev. in RBAC), in cui il 
 controllo degli accessi si basa sui diritti associati al ruolo dell'utente. 
 Altre tecniche di controllo degli accessi possono essere implementate cambiando le politiche. Nonostante ciò, 
 questo approccio risulta quello più consono alla dimostrazione delle capacità di OpenPolicyAgent.
@@ -271,6 +273,6 @@ con una controparte ufficialmente verificata è un processo banale.
 \section{Testing}
 L'intera infrastruttura prende vita avviando i container di Docker Compose attraverso il comando \texttt{docker-compose up}.
 \\ Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenti nel proprio header le informazioni necessarie per formulare una query.
-\\ \textit{cURL} è il software principale usanto in ambito di testing, siccome permette di inviare dati attraverso 
+\\ \textit{cURL} (o curl) è il software principale usanto in ambito di testing, siccome permette di inviare dati attraverso 
 numerosi protocolli, tra cui anche HTTP. 
 \\ Questo metodologia è stata applicata in continuità durante lo sviluppo dell'intero progetto. 
