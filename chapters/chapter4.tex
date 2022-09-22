@@ -1,26 +1,33 @@
 Una delle motivazioni principale che ha portato alla creazione del progetto descritto in questa tesi 
-sta nel creazione un sistema che supportasse 
-un nuova tecnica di autenticazione e che fosse retrocompatibile con il metodo usato in precedenza dall'INFN.  
+sta nella creazione un sistema che supportasse 
+un nuova tecnica di autenticazione e che fosse retrocompatibile con il metodo usato in precedenza dall'INFN CNAF.  
 Queste due tecniche consistono rispettivamente nell'autenticazione basata su token e su certificati.    
 \\ In questo capitolo si analizzeranno i due metodi diversi di autenticazione e si implementerà la gestione 
-dei dati provenienti da loro.
+dei dati provenienti da essi.
 
 \section{JSON Web Token}
-\textcolor{blue}{[Cos'è un JWT? Com'è fatto?]}
-\textcolor{blue}{[Quali sono le modifiche fatte al sistema? ]}
 I \textit{JSON Web Token} (abbrev. in JWT) rappresentano uno standard per la definizione di un metodo 
-compatto e sicuro per la trasmissione di dati in formato JSON.  
-\\ Nella loro forma più diffusa, i JWT sono costituiti da tre parti:
+compatto e sicuro per la trasmissione di dati in formato JSON. La sicurezza di questo metodo di scambio delle 
+informazioni deriva dal fatto che i token possono essere firmati digitalmente, assicurando così integrità e confidenzialità dei dati.  
+\\ Nella loro forma più diffusa, i JWT sono costituiti, in successione, da tre parti:
 \begin{itemize}
-    \item L'\textit{header} contiene   
-    \item Il \textit{payload}
-    \item La \textit{signature}
+    \item L'\textit{header}, che contiene le informazioni riguardo il tipo di token (ovvero JWT) e 
+    l'algoritmo usato per la firma dei dati. 
+    \item Il \textit{payload}, dove risiedono le informazioni che si vogliono scambiare. Tipicamente, una parte di questo campo è 
+    è dedicata a delle dichiarazioni predefinite riguardo il client e la validità del token. 
+    \item La \textit{signature}, che si ottiene firmando l'header e il payload con la chiave pubblica del destinatario.
 \end{itemize}
-Queste tre campi sono separati da dei punti, quindi un tipico JWT è nella forma:
+Queste tre campi sono separati da dei punti, quindi un tipico JWT è definito nella forma:
 \\ \centerline{\texttt{xxxxx.yyyyy.zzzzz}}
-\\
+\\ L'uso più comune dei JSON Web Tokens consiste nel loro impiego come metodo di autenticazione. Generalmente, dopo che un utente si 
+autentica a un servizio tramite le proprie credenziali, riceve un token. Questo assicura l'utente possiede dell'identità dell'utente, 
+e definisce  \textcolor{blue}{[da cambiare]}. In questo modo, ogni operazione successiva all'autenticazione che richiede un controllo dell'accesso 
+e segue l'autenticazione invierà una richiesta che contiene tale token, senza che sia necessario  
+-
 OpenPolicyAgent supporta delle funzioni built-in per la decodifica e la verifica dei JWT.
 con le regole usate per l'implementazione del RBAC nel Codice \ref*{opa_policy}. 
+\textcolor{blue}{[Cos'è un JWT? Com'è fatto?]}
+\textcolor{blue}{[Quali sono le modifiche fatte al sistema? ]}
 
 \section{Certificati VOMS Proxy}
 Nell'ambito del calcolo distribuito, le organizzazioni virtuali (abbrev. VO) rappresentano una collezione di gruppi 

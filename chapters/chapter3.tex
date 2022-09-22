@@ -7,13 +7,14 @@ nella descrizione della parte operativa, attraverso l'illustrazione di frammenti
 Con \textit{software stack} si intende l'insieme di sottosistemi software che permettono di realizzare una piattaforma completa.
 Questi lavorano assieme per consentire la corretta esecuzione di un'applicazione oppure, come nel caso in questione, il 
 funzionamento di un sistema.
-Lo stack dell'infrastruttura è composto dai seguenti moduli, che saranno descritti nei paragrafi seguenti:
+Lo stack dell'infrastruttura è composto dai seguenti moduli:
 \begin{itemize}
     \item OpenPolicyAgent
     \item NGINX
     \item Docker
 \end{itemize}
-Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolgere il proprio compito. 
+che saranno descritti nei paragrafi successivi.
+\\ Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolgere il proprio compito. 
 
 
 \subsection{OpenPolicyAgent}
@@ -40,18 +41,26 @@ Il codice dedicato alle politiche diventa così molto conciso rispetto ad un lor
 linguaggio imperativo. 
 \\ Un'altra feature molto interessante di questo software sta nella funzionalità dell'API della pol. In questo modo, una politica può essere modificata o inserita 
 in qualsiasi momento, tramite una richiesta all'API. Solamente chi ha accesso alla rete interna può usufruire di questa funzione. 
-\\ OpenPolicyAgent è il software che alimenta \textcolor{blue}{[non so se il termine sia corretto]} interamente il sistema di politiche. Oltra a formulare una decisione,
- infatti, gestisce la ricezione delle informazioni e la trasmissione del risultato.  
+\\ OpenPolicyAgent è il software che gestisce interamente il sistema di politiche. Oltra a formulare una decisione,
+ infatti, coordina la ricezione delle informazioni e la trasmissione del risultato.  
 
 
 \subsection{NGINX}
 \textit{NGINX} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e del 
 service server. 
-È conosciuto per la sua stabilità e il suo consumo di risorse molto basso; contrariamente ai server tradizionali,  
-non usa moltecipli thread per gestire le richieste, ma si limita ad un'architettura asincrona a eventi. Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, e si
- limita alla creazione di un file con estensione ".config" con le clausole necessarie. 
- \\ NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli esterni attraverso il linguaggio \textit{NJS}, 
- che consiste in una versione di JavaScript modificata. 
+È conosciuto per la sua stabilità, semplicità di configurazione, estensibilità e consumo di risorse molto basso, infatti:
+\begin{itemize}
+    \item 
+    Contrariamente ai server tradizionali,  
+    non usa moltecipli thread per gestire le richieste, ma si limita ad un'architettura asincrona a eventi. 
+    In questo modo, riesce a gestire un numero alto di connessioni senza che vi siano enormi ripercussioni sulle prestazioni. 
+    
+    \item Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, e si
+    limita alla creazione di un file con estensione ".config" con le clausole necessarie. 
+    \item NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli esterni attraverso il linguaggio \textit{NJS}, 
+    che consiste in una versione di JavaScript modificata. 
+\end{itemize}
+Per queste ragione Nginx è stato preferito ad altri sowtware similari.
 
 \subsection{Docker}
 \textit{Docker} è una piattaforma che sfrutta la virtualizzazione a livello del sistema operativo per incorporare software 
@@ -63,7 +72,7 @@ che comunicano fra loro su una rete privata. In questo modo è possibile creare 
 un funzionamento e struttura analoghe al sistema finale. Le caratteristiche dei container e i collegamenti fra questi vengono definite tramite un file di configurazione in YAML. 
 
 
-\section{Implementazioni delle componenti}
+\section{Implementazione delle componenti}
 L'intera struttura del sistema è definita attraverso il file di configurazione di Docker Compose. Ciò implica che ogni 
 elemento è stato virtualizzato attraverso un container, che svolge il suo compito come un processo separato. 
 \\ La topologia delle relazioni rispecchia quanto mostrato nella Figura \ref*{topologia}. 
@@ -202,7 +211,6 @@ I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoin
             // (che e' 200 in caso non vi siano errori)
             r.return(opa_res.status);
         });
-    
     }
 \end{lstlisting}
 In base alla risposta del sistema di politche, il reverse proxy inoltrerà il pacchetto originale al service server con la keyword \texttt{proxy\_pass}, 
@@ -245,7 +253,7 @@ come si può vedere nel Codice \ref*{nginx_web}.
 \section{Cifratura SSL/TLS}
 Spesso un sistema di autorizzaione richiede delle informazioni sensibili riguardo un utente per attuare il controllo 
 degli accessi. 
-Per proteggere il flusso dati da possibili intercettazioni è necessario che la comunicazione fra il servizio e l'utente venga cifrata. 
+Per proteggere il flusso dati da possibili intercettazioni è opportuno che la comunicazione fra il servizio e l'utente venga cifrata. 
 \\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmettrica. Il suo funzionamento necessita 
 dei certificati X.509, e in questo modo garantiscono che la chiave pubblica di un host appartenga effettivamente ad esso. 
 \\ Nel caso del progetto di questa tesi, solamente la connesione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno

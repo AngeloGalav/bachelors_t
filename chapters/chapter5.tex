@@ -1,7 +1,9 @@
 Durante le fasi di sviluppo iniziali, il servizio collegato al sistema di autenticazione era dato da una API
 elementare. Quest'ultima non presentava delle funzionalità significative: la sua creazione era totalmente 
-a sostegno del sistema di autorizzazione, dunque il servizio vero e proprio che la componente forniva non era 
+a sostegno del sistema di autorizzazione, dunque il carattere del servizio fornito e la sua complessità non erano 
 di estrema rilevanza.  
+\\ Tuttavia, per quanto un'impostazione simile possa essere utile ai fini dell'implementazione del sistema, non 
+permette di valutare correttamente le caratteristiche del Proof-of-Concept.
 \\ In questa sezione verrà mostrato il processo di interfacciamento del sistema con un servizio 
 realistico e complesso, analizzando le modifiche necessarie per abilitare un controllo degli accesso
 nei suoi endpoint. 
@@ -11,15 +13,33 @@ di massa nei centri di computazione distribuita. \\ In relazione a questo, \text
  attivamente all'INFN CNAF, che nella data di scrittura di questa tesi è in fase di Proof-of-Concept.
  \textcolor{blue}{[correggimi se sto sbagliando qui giaco]}
 Consiste in un'implementazione della specifica {WLCG Tape REST API}, che offre un'interfaccia comune per permettere 
-ai client di gestire la residenza dei dati mantenuti sui dischi nei GRID di tutto il mondo. 
+ai client di gestire la residenza dei dati mantenuti negli storage dati dei GRID di tutto il mondo. 
 \\ Il nome Storm-Tape deriva dal fatto che, nei centri di calcolo distribuiti,
  le informazioni vengono mantenute in dischi basati su nastro, in quanto permettono di memorizzare 
-grandi moli di dati con un consto relativamente basso. Dunque, come si può intuire, questo servizio è dedicato esclusivamente 
-ai sistemi che fanno uso di memoria basata su nastro. \\ 
-L'API fornisce le seguenti funzionalità:
-
+grandi moli di dati con un costo relativamente basso. \\
+Il più grande difetto deCome si può intuire, questo servizio è dedicato esclusivamente ai sistemi che fanno uso di memoria basata su nastro. 
+Nei sistemi GRID con memoria di massa basata su nastro, 
+Le funzionalità che fornisce questa API sono illustrate nella Tabella \ref*{tab:table-name}.
+\begin{table}
+\begin{center}
+\begin{tabular}{ | m{8em} | m{19em} | } 
+  \hline
+  \textbf{Funzionalità} & \textbf{Descrizione} \\ 
+  \hline
+  \texttt{STAGE} & Richiede che i file mantenuti su un determinato siano resi disponibili con latenza di un disco rigido. \\ 
+  \hline
+  \texttt{RELEASE} & Indica che i file precedentemente resi disponibili non sono più richiesti.   \\ 
+  \hline
+  \texttt{ARCHIVEINFO} & Richiede informazioni riguardo il progresso della scrittura dei file su nastro. \\ 
+  \hline
+\end{tabular}
+\caption{\label{tab:table-name} Insieme delle operazioni fornite dalla specifica WLCG Tape REST API}
+\end{center}
+\end{table}
+\textcolor{blue}{[da inserire maggiori info riguardo l'API, es. endpoint]}
 
 \section{Interfacciare il sistema con il servizio}
+\section{Risultati}
 
 
 \textcolor{blue}{[Perché questo?]}
