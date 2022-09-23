@@ -1,6 +1,6 @@
 Una delle motivazioni principale che ha portato alla creazione del progetto descritto in questa tesi 
 sta nella creazione un sistema che supportasse 
-l'autorizzazione tramite token e che fosse retrocompatibile con il metodo d'autenticazione usato in precedenza dall'INFN CNAF.  
+l'autorizzazione tramite token e che fosse retrocompatibile con il metodo d'autenticazione usato in precedenza dai sistemi di autorizzazione dei grid computazionali.  
 Quest'ultimo consiste in una tecnica basata su certificati proxy, ovvero certificati che permettono di eseguire delle operazioni facendo le veci di un'altra entità. 
 \\ In questo capitolo si analizzeranno i due metodi diversi di autenticazione e il processo d'implementazione della gestione 
 dei dati provenienti da essi.
@@ -89,6 +89,13 @@ dovrà includere il certificato nella sua richiesta d'accesso.
 \\ I certificati VOMS Proxy, come indicato dal nome, vengono usati per autenticarsi attraverso le informazioni di un'altra entità, in questo caso una VO, ed eseguire le operazioni
 per conto di questa. Possiede lo stesso formato di un certificato X.509, con l'eccezione dell'aggiunta di un campo chiamato \textit{attribute certificate} (abbrev. AC),
  contenente un altro certificato associato alla VO. 
+\\ Altre informazioni provenienti da questi certificati sono:
+\begin{itemize}
+    \item I \textit{Fully Qualified Attribute Names}, che sono delle stringhe di testo nella 
+    forma \texttt{/VO[/group[/subgroup(s)]][/Role=role][/Capability=cap]} e indicano il ruolo di ogni utente nel gruppo e nei suoi sottogruppi. 
+    \item Informazioni riguardo il certificato dell'utente e dell'ac, tra cui nazione e stato d'origine, organizzazione e common name.   
+\end{itemize}
+Il set disponibile di informazioni rigurado l'utente fornisce una certa granularità nella progettazione delle regole del controllo degli accessi. 
 
 \subsection{HTTPG}
 Il sistema VOMS e i certificati VOMS Proxy sono impiegati principalmente per la comunicazione attraverso \textit{Grid Security Infrastructure} (abbrev. GSI), ovvero 
@@ -105,13 +112,31 @@ certificate, e lo inserisce in una copia della chiave pubblica dell'utente. Tutt
 dell'integrazione a VOMS Proxy presentano un AC associato a questa VO, e presentano un tempo di validità di 24 ore.   
 
 \subsection{Integrazione dei VOMS Proxy}
-Per la creazione di servizi 
-L'integrazione del supporto all'autorizzazione tramite certificati VOMS Proxy comporta la riconfigurazione del reverse proxy da un sottosistema.   
-Siccome l'uso dei VOMS Proxy influenza il protocollo di comunicazione, la componente reverse proxy dovrà subire alcuni cambiamenti. 
-\\ L'INFN CNAF ha sviluppato un modulo NGINX , è
-\\Il modulo dedicato all'invio dei dati al sistema di politiche accede alle variabili create all'interno di OpenResty, 
+L'integrazione del supporto all'autorizzazione tramite certificati VOMS Proxy comporta la riconfigurazione del reverse proxy, 
+siccome l'uso di questi certificati richiede una modifica nel protocollo di comunicazione. 
+\\ La sezione di Software Development dell'INFN CNAF ha sviluppato una patch di NGINX per abilitare la comunicazione tramite HTTPG ed estrarre automaticamente le informazioni dai VOMS Proxy.
+Nonostante ciò, questo aggiornamento è richiede un sottosistema basato su \textit{OpenResty}, un branch di NGINX che supporta moduli scritti in linguaggio Lua. 
+Il processo di configurazione di OpenResty
+ rimane pressocché lo stesso del software originale, dunque i file di configurazione e le impostazioni sono riutilizzabili 
+senza che vi siano alterazioni. Per questo motivo, si è deciso di reimplementare il reverse proxy usando questa versione modificata di NGINX. 
+\\ Tramite queste modifiche, lo sviluppo del supporto ai certificati VOMS consiste principalmente nell'inserimento da parte del reverse proxy 
+delle informazioni estratte dal certificato in variabili interne ad OpenResty. 
+
+\begin{lstlisting}[caption={Assegnazione di variabili in OpenResty},captionpos=b,label=openresty_var]
+    location /operation/ {
+        ...
+        set $generic_var $voms_user;
+        set $generic_var $voms_vo;
+        ...
+    }
+\end{lstlisting}
+In questo modo, il modulo NJS dedicato all'invio dei dati al sistema di politiche accede alle variabili create all'interno di OpenResty, 
 e le inserisce nel pacchetto destinato a OpenPolicyAgent. 
+\\Un esempio di assegnazione di valori in variabili interne a 
+OpenResty è visibile nel Codice \ref{openresty_var}.
 \\ Per permettere che le informazioni contenute nei VOMS influenzino il processo di decision-making del controllo degli accessi,
  è necessaria l'aggiunta di regole aggiuntive. La loro semantica e sintassi sarà simile a quanto illustrato nel Codice \ref*{opa_policy},
 tuttavia si farà riferimento ad una VO rispetto a un ruolo o a un gruppo.
+\\ \\ \textcolor{blue}{[da aggiungere a conclusioni]}Il sistema di autorizzazione, con l'aggiunta del supporto all'autorizzazione tramite token OAuth e certificati VOMS, riesce ad ottenere informazioni 
+da due tecniche di autenticazione molto diverse e a formulare delle decisioni legate al controllo dell'accesso, senza che queste siano mutualmente esclusive. 
 
