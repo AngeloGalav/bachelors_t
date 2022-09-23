@@ -1,8 +1,8 @@
 Una delle motivazioni principale che ha portato alla creazione del progetto descritto in questa tesi 
 sta nella creazione un sistema che supportasse 
-un nuova tecnica di autenticazione e che fosse retrocompatibile con il metodo usato in precedenza dall'INFN CNAF.  
-Queste due tecniche consistono rispettivamente nell'autenticazione basata su token e su certificati.    
-\\ In questo capitolo si analizzeranno i due metodi diversi di autenticazione e si implementerà la gestione 
+l'autorizzazione tramite token e che fosse retrocompatibile con il metodo d'autenticazione usato in precedenza dall'INFN CNAF.  
+Quest'ultimo consiste in una tecnica basata su certificati proxy, ovvero certificati che permettono di eseguire delle operazioni facendo le veci di un'altra entità. 
+\\ In questo capitolo si analizzeranno i due metodi diversi di autenticazione e il processo d'implementazione della gestione 
 dei dati provenienti da essi.
 
 \section{JSON Web Token}
@@ -19,20 +19,99 @@ informazioni deriva dal fatto che i token possono essere firmati digitalmente, a
 \end{itemize}
 Queste tre campi sono separati da dei punti, quindi un tipico JWT è definito nella forma:
 \\ \centerline{\texttt{xxxxx.yyyyy.zzzzz}}
-\\ L'uso più comune dei JSON Web Tokens consiste nel loro impiego come metodo di autenticazione. Generalmente, dopo che un utente si 
-autentica a un servizio tramite le proprie credenziali, riceve un token. Questo assicura l'utente possiede dell'identità dell'utente, 
-e definisce  \textcolor{blue}{[da cambiare]}. In questo modo, ogni operazione successiva all'autenticazione che richiede un controllo dell'accesso 
-e segue l'autenticazione invierà una richiesta che contiene tale token, senza che sia necessario  
--
-OpenPolicyAgent supporta delle funzioni built-in per la decodifica e la verifica dei JWT.
-con le regole usate per l'implementazione del RBAC nel Codice \ref*{opa_policy}. 
-\textcolor{blue}{[Cos'è un JWT? Com'è fatto?]}
-\textcolor{blue}{[Quali sono le modifiche fatte al sistema? ]}
+\\ L'uso più comune dei JSON Web Tokens consiste nel loro impiego come metodo di autenticazione.
+
+\subsection{OAuth 2.0 e OpenID Connect}
+\textit{OAuth 2.0} è un protocollo per l'autorizzazione nelle applicazioni software. Definisce uno standard per la gestione del controllo degli accessi
+in un servizio HTTP, stabilendo come un client possa provare la propria identità attraverso l'uso di un token d'accesso, in sostituzione all'uso delle proprie credenziali. 
+\\ \textit{OpenID Connect} (abbrev. OIDC) è un layer d'autenticazione costruito su OAuth 2.0, che permette ad un'applicazione di 
+verificare l'identità di un utente e di ottenere delle semplici informazioni su di esso tramite un ID Token. Questo protocollo abilita il \textit{Single Sign-On} (abbrev. in SSO), 
+che consiste nella possibilità di autenticare la propria identità su più servizi non necessariamente correlati senza dover immettere le proprie credenziali. 
+\\OIDC sfrutta i JSON Web Token, che sono ottenibili in conformità con i metodi specificati da OAuth 2.0. Per questo motivo, spesso si usa il gergo
+"token OAuth 2.0" per fare riferimento ai JWT usati nel contesto di OIDC.  
+\\OIDC e OAuth 2.0 permettono di definire uno standard per l'accesso basato su token, che rimane un canone per molti servizi su Internet.
+
+\subsection{Generazione dei tokens}
+Durante la fase di sviluppo, i token sono stati generati con il software \textit{OIDC Agent}, che fornisce JWT conformi alla specifica di OpenID Connect.
+Questo software usa un'interfaccia da linea di comando e crea dei token attraverso una configurazione che stabilisce l'issuer e alcune caratteristiche del token.
+\\ Nel contesto del progetto, i token generati contengono un campo \texttt{wlcg.groups}, che rappresenta una lista dei gruppi a cui l'utente appartiene. 
+La sigla WLCG sta per \textit{Worldwide LHC Computing Grid}, che è un'organizzazione data dalla collaborazione fra le infrastrutture di 
+grid computazionali presenti in tutto il mondo. 
+
+
+\subsection{Integrazione dei JWT}
+L'integrazione dei JWT come metodo di autenticazione del sistema di autorizzazione viene decisamente semplifica 
+dalla scelta di inserire OpenPolicyAgent nel software stack. 
+Questo infatti fornisce delle funzioni built-in per la decodifica e la verifica dei JWT.
+\\ Dunque, per abilitare ufficialmente il controllo degli accessi tramite i dati presenti nei token OAuth, 
+è necessario alterare il modulo del reverse proxy dedicato allo scambio dei dati al sistema di politiche. In particolare, la modifica consiste 
+nell'aggiunta di un campo contenente il token d'autorizzazione nella richiesta dedicata ad OpenPolicyAgent.
+\\ Per fare in modo che le policy nel sistema di politiche possano effettivamente analizzare queste informazioni e formulare una decisione, 
+si sfruttano le funzioni built-in menzionate all'inizio di questo paragrafo. 
+\begin{lstlisting}[caption={Esempio di regole per la gestione dei token OAuth 2.0},captionpos=b,label=opa_jwt]
+    # controllo dei permessi dell'utente
+    check_permission_jwt {
+        data.roles[payload["wlcg.groups"][_]][_]
+                == input.operation
+    }
+    
+    # validazione del tempo del token 
+    check_time_validity {
+        payload.exp <= time.now_ns()
+    } else { # caso di token senza scadenza
+        payload.iss == payload.exp
+        payload.exp == payload.nbf
+    }
+    
+    # formattazione e decodifica del token
+    payload := p {
+        [_, p, _] := io.jwt.decode(input.token)
+    }
+\end{lstlisting}
+Come mostrato nel Codice \ref{opa_jwt}, \texttt{io.jwt.decode} è uno dei metodi che OPA offre per l'estrazione dei dati da un token.
+Tramite quanto ottenuto, possiamo verificare se i gruppi associati all'utente possano effettivamente usufruire del servizio al quale sta tentando di accedere.
+\\ Le nuove regole inserite verranno richiamate nella clausola \texttt{allow}, in modo da influenzare la decisione finale riguardo l'autorizzazione. 
+\\ OpenPolicyAgent fornisce anche altre funzioni per la gestione dei JWT, che includono la verifica della firma del token, 
+permettendo di progettare delle politiche complesse e che ricoprono molti casi d'uso. 
 
 \section{Certificati VOMS Proxy}
-Nell'ambito del calcolo distribuito, le organizzazioni virtuali (abbrev. VO) rappresentano una collezione di gruppi 
-di invidui sparsi nel mondo che definite da una serie di regole riguardo la condivisione delle risorse.
-\\ Il Virtual Organization Membership Service (abbrev. VOMS), è un servizio per il controllo degli accessi 
-nei servizi distribuiti, che implementa
-un database per ogni organizzazione virtuale (di fatto per ogni esperimento) all’interno del
-quale sono mantenuti i dati relativi ad ogni singolo membro/utente
+Nell'ambito del calcolo distribuito, le \textit{organizzazioni virtuali} (abbrev. VO) rappresentano delle collezioni di gruppi 
+di individui sparsi nel mondo, definiti da una serie di regole riguardo la condivisione delle risorse. 
+\\Il Virtual Organization Membership Service (abbrev. VOMS) è un servizio per il controllo degli accessi 
+nei servizi distribuiti, e implementa
+un database per ogni organizzazione virtuale, all'interno del
+quale sono mantenuti i dati relativi ad ogni singolo membro del complesso. Il servizio VOMS è utilizzato quotidiamente da 
+migliaia di scienziati del mondo per autorizzare l'accesso alle risorse dei sistemi distribuiti, per usufruire sia dello storage che della 
+loro potenza di calcolo. 
+\\ In questo contesto, le informazioni e gli attributi di un utente che sono gestite da VOMS vengono inserite in un certificato \textit{VOMS Proxy}.
+Dunque, quando un membro di una VO necessita di eseguire un'operazione che richiede autorizzazione (i.e. la sottomissione di un problema in relazione ad un esperimento), 
+dovrà includere il certificato nella sua richiesta d'accesso. 
+\\ I certificati VOMS Proxy, come indicato dal nome, vengono usati per autenticarsi attraverso le informazioni di un'altra entità, in questo caso una VO, ed eseguire le operazioni
+per conto di questa. Possiede lo stesso formato di un certificato X.509, con l'eccezione dell'aggiunta di un campo chiamato \textit{attribute certificate} (abbrev. AC),
+ contenente un altro certificato associato alla VO. 
+
+\subsection{HTTPG}
+Il sistema VOMS e i certificati VOMS Proxy sono impiegati principalmente per la comunicazione attraverso \textit{Grid Security Infrastructure} (abbrev. GSI), ovvero 
+il sistema di autorizzazione utilizzato nei grid computazionali. 
+\\Tutte le infrastrutture che usufruiscono dei certificati VOMS Proxy, e quindi anche i GSI, non permettono una trasmissione di dati attraverso HTTP; bensì, richiedono un protocollo chiamato \textit{HTTPG}.
+Quest'ultimo si differenzia con i protocolli HTTP e HTTPS nell'handshake iniziale, dove oltre allo scambio delle normali informazioni di inizializzazione, il client invia un bit che determina la volontà di delegare l'operazione o meno alla VO.
+Dopo questa fase, la comunicazione prosegue seguendo quanto specificato dal protocollo HTTP.    
+\\ HTTPG non rappresenta uno standard per la comunicazione, e dunque di norma non è integrato nei servizi al di fuori di quelli dedicati ai grid.  
+
+\subsection{Generazione dei certificati VOMS Proxy}
+Il processo di generazione di un VOMS Proxy richiede l'applicazione \textit{VOMS Clients}, che contatta un'organizzazione virtuale per ricevere un attribute 
+certificate, e lo inserisce in una copia della chiave pubblica dell'utente. Tutto ciò avviene attraverso l'uso del comando \texttt{voms-proxy-init}. 
+\\Il servizio VOMS fornisce una VO associata al testing dei servizi, chiamata test.vo. I certificati usati durante lo sviluppo 
+dell'integrazione a VOMS Proxy presentano un AC associato a questa VO, e presentano un tempo di validità di 24 ore.   
+
+\subsection{Integrazione dei VOMS Proxy}
+Per la creazione di servizi 
+L'integrazione del supporto all'autorizzazione tramite certificati VOMS Proxy comporta la riconfigurazione del reverse proxy da un sottosistema.   
+Siccome l'uso dei VOMS Proxy influenza il protocollo di comunicazione, la componente reverse proxy dovrà subire alcuni cambiamenti. 
+\\ L'INFN CNAF ha sviluppato un modulo NGINX , è
+\\Il modulo dedicato all'invio dei dati al sistema di politiche accede alle variabili create all'interno di OpenResty, 
+e le inserisce nel pacchetto destinato a OpenPolicyAgent. 
+\\ Per permettere che le informazioni contenute nei VOMS influenzino il processo di decision-making del controllo degli accessi,
+ è necessaria l'aggiunta di regole aggiuntive. La loro semantica e sintassi sarà simile a quanto illustrato nel Codice \ref*{opa_policy},
+tuttavia si farà riferimento ad una VO rispetto a un ruolo o a un gruppo.
+

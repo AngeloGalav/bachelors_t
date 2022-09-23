@@ -7,18 +7,18 @@ permette di valutare correttamente le caratteristiche del Proof-of-Concept.
 \\ In questa sezione verrà mostrato il processo di interfacciamento del sistema con un servizio 
 realistico e complesso, analizzando le modifiche necessarie per abilitare un controllo degli accesso
 nei suoi endpoint. 
-\section{Storm-Tape API}
+\section{Storm-Tape}
 \textit{STOrage Resource Manager} (o StoRM) è un servizio dedicato alla gestione della memoria 
 di massa nei centri di computazione distribuita. \\ In relazione a questo, \textit{Storm-Tape API} è un progetto sviluppato
  attivamente all'INFN CNAF, che nella data di scrittura di questa tesi è in fase di Proof-of-Concept.
  \textcolor{blue}{[correggimi se sto sbagliando qui giaco]}
 Consiste in un'implementazione della specifica {WLCG Tape REST API}, che offre un'interfaccia comune per permettere 
-ai client di gestire la residenza dei dati mantenuti negli storage dati dei GRID di tutto il mondo. 
+ai client di gestire la residenza dei dati mantenuti negli storage dati dei grid di tutto il mondo. 
 \\ Il nome Storm-Tape deriva dal fatto che, nei centri di calcolo distribuiti,
  le informazioni vengono mantenute in dischi basati su nastro, in quanto permettono di memorizzare 
 grandi moli di dati con un costo relativamente basso. \\
 Il più grande difetto deCome si può intuire, questo servizio è dedicato esclusivamente ai sistemi che fanno uso di memoria basata su nastro. 
-Nei sistemi GRID con memoria di massa basata su nastro, 
+Nei sistemi grid con memoria di massa basata su nastro, 
 Le funzionalità che fornisce questa API sono illustrate nella Tabella \ref*{tab:table-name}.
 \begin{table}
 \begin{center}
