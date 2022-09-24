@@ -17,17 +17,17 @@ L'architettura dell'infrastruttura presenta uno scheletro formato da tre compone
 \begin{itemize}
     \item il \textit{reverse proxy}
     \item il \textit{sistema di politiche}
-    \item il \textit{service server}
+    \item l' \textit{application server}
 \end{itemize}
 Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tuttavia solo le prime due influenzano il processo di autorizzazione. 
 
 \subsection{Reverse proxy}
 Il reverse proxy rappresenta l'entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
-mediare la comunicazione tra client e service server: ogni richiesta che viene fatta da un utente è obbligata ad attraversare 
+mediare la comunicazione tra client e application server: ogni richiesta che viene fatta da un utente è obbligata ad attraversare 
 il reverse proxy prima di giungere al server. 
 L'attraversamento del proxy è trasparente: al client apparirà di comunicare direttamente con il server, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
 \\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene effettivamente espresso il concetto di autorizzazione. 
-Infatti, il reverse proxy inoltra o ignora le richieste al service server, basandosi sull'output del sistema di politiche.  
+Infatti, il reverse proxy inoltra o ignora le richieste all'application server, basandosi sull'output del sistema di politiche.  
  
 \subsection{Sistema di politiche}
 Il sistema di politiche è la parte che determina come la richiesta dovrà essere gestita. 
@@ -35,8 +35,8 @@ Il sistema di politiche è la parte che determina come la richiesta dovrà esser
 Dopodiché, le confronta con dati quali politiche e permessi, ai quali ha accesso diretto.
 Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito.  
 
-\subsection{Service server} \label{serv_server}
-Con service server si intende il servizio che sfrutta il sistema di autorizzazione. Come tale, il suo ciclo d'esecuzione consiste nel gestire 
+\subsection{Application server} \label{serv_server}
+Con application server si intende il servizio che sfrutta il sistema di autorizzazione. Come tale, il suo ciclo d'esecuzione consiste nel gestire 
 le richieste provenienti dagli utenti tramite
  il reverse proxy e formulare una risposta.
 Questa viene indirezionata al mittente iniziale, senza che sia filtrata o analizzata, ma attraversando comunque il proxy.

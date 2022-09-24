@@ -1,6 +1,6 @@
-Una delle motivazioni principale che ha portato alla creazione del progetto descritto in questa tesi 
-sta nella creazione un sistema che supportasse 
-l'autorizzazione tramite token e che fosse retrocompatibile con il metodo d'autenticazione usato in precedenza dai sistemi di autorizzazione dei grid computazionali.  
+Uno tra i principali obiettivi che ha portato alla creazione del progetto descritto in questa tesi 
+risiede nella creazione un sistema che supportasse 
+l'autorizzazione tramite token e che fosse retro-compatibile con il metodo d'autenticazione usato in precedenza dai sistemi di autorizzazione dei grid computazionali.  
 Quest'ultimo consiste in una tecnica basata su certificati proxy, ovvero certificati che permettono di eseguire delle operazioni facendo le veci di un'altra entità. 
 \\ In questo capitolo si analizzeranno i due metodi diversi di autenticazione e il processo d'implementazione della gestione 
 dei dati provenienti da essi.
@@ -17,36 +17,36 @@ informazioni deriva dal fatto che i token possono essere firmati digitalmente, a
     è dedicata a delle dichiarazioni predefinite riguardo il client e la validità del token. 
     \item La \textit{signature}, che si ottiene firmando l'header e il payload con la chiave pubblica del destinatario.
 \end{itemize}
-Queste tre campi sono separati da dei punti, quindi un tipico JWT è definito nella forma:
+Queste tre campi sono separati da dei punti, quindi un tipico JWT si presetna nella seguente forma:
 \\ \centerline{\texttt{xxxxx.yyyyy.zzzzz}}
 \\ L'uso più comune dei JSON Web Tokens consiste nel loro impiego come metodo di autenticazione.
 
 \subsection{OAuth 2.0 e OpenID Connect}
 \textit{OAuth 2.0} è un protocollo per l'autorizzazione nelle applicazioni software. Definisce uno standard per la gestione del controllo degli accessi
-in un servizio HTTP, stabilendo come un client possa provare la propria identità attraverso l'uso di un token d'accesso, in sostituzione all'uso delle proprie credenziali. 
+in un qualsiasi servizio HTTP, stabilendo il modo in cui un client possa provare la propria identità attraverso l'uso di un token d'accesso, in sostituzione all'uso delle proprie credenziali. 
 \\ \textit{OpenID Connect} (abbrev. OIDC) è un layer d'autenticazione costruito su OAuth 2.0, che permette ad un'applicazione di 
 verificare l'identità di un utente e di ottenere delle semplici informazioni su di esso tramite un ID Token. Questo protocollo abilita il \textit{Single Sign-On} (abbrev. in SSO), 
-che consiste nella possibilità di autenticare la propria identità su più servizi non necessariamente correlati senza dover immettere le proprie credenziali. 
+che consiste nella possibilità di autenticare la propria identità su più servizi non necessariamente correlati senza dover immettere le proprie credenziali di volta in volta. 
 \\OIDC sfrutta i JSON Web Token, che sono ottenibili in conformità con i metodi specificati da OAuth 2.0. Per questo motivo, spesso si usa il gergo
 "token OAuth 2.0" per fare riferimento ai JWT usati nel contesto di OIDC.  
-\\OIDC e OAuth 2.0 permettono di definire uno standard per l'accesso basato su token, che rimane un canone per molti servizi su Internet.
+\\OIDC e OAuth 2.0 di fatto definiscono uno standard per l'accesso basato su token, che rimane un canone per molti servizi su Internet.
 
 \subsection{Generazione dei tokens}
-Durante la fase di sviluppo, i token sono stati generati con il software \textit{OIDC Agent}, che fornisce JWT conformi alla specifica di OpenID Connect.
-Questo software usa un'interfaccia da linea di comando e crea dei token attraverso una configurazione che stabilisce l'issuer e alcune caratteristiche del token.
+Durante la fase di sviluppo del sistema, i token sono stati generati con il software \textit{OIDC Agent}, che fornisce JWT conformi alla specifica di OpenID Connect.
+Questo software usa un'interfaccia a linea di comando e crea dei token attraverso un'opportuna configurazione che stabilisce l'issuer e alcune caratteristiche del token.
 \\ Nel contesto del progetto, i token generati contengono un campo \texttt{wlcg.groups}, che rappresenta una lista dei gruppi a cui l'utente appartiene. 
-La sigla WLCG sta per \textit{Worldwide LHC Computing Grid}, che è un'organizzazione data dalla collaborazione fra le infrastrutture di 
+L'acronimo WLCG per esteso è \textit{Worldwide LHC Computing Grid}: si tratta di un'organizzazione nata dalla collaborazione fra le infrastrutture di 
 grid computazionali presenti in tutto il mondo. 
 
 
 \subsection{Integrazione dei JWT}
-L'integrazione dei JWT come metodo di autenticazione del sistema di autorizzazione viene decisamente semplifica 
+L'integrazione dei JWT come metodo di autenticazione del sistema di autorizzazione viene decisamente semplificata
 dalla scelta di inserire OpenPolicyAgent nel software stack. 
-Questo infatti fornisce delle funzioni built-in per la decodifica e la verifica dei JWT.
-\\ Dunque, per abilitare ufficialmente il controllo degli accessi tramite i dati presenti nei token OAuth, 
-è necessario alterare il modulo del reverse proxy dedicato allo scambio dei dati al sistema di politiche. In particolare, la modifica consiste 
+Questo software infatti fornisce delle funzioni built-in per la decodifica e la verifica dei JWT.
+\\ Un passaggio chiave per abilitare ufficialmente il controllo degli accessi tramite i dati presenti nei token OAuth, 
+consiste nella modifica del modulo del reverse proxy dedicato allo scambio dei dati al sistema di politiche. In particolare, l'alterazione consiste 
 nell'aggiunta di un campo contenente il token d'autorizzazione nella richiesta dedicata ad OpenPolicyAgent.
-\\ Per fare in modo che le policy nel sistema di politiche possano effettivamente analizzare queste informazioni e formulare una decisione, 
+\\ Per fare in modo che le policy del sistema di politiche possano effettivamente analizzare queste informazioni e formulare una decisione, 
 si sfruttano le funzioni built-in menzionate all'inizio di questo paragrafo. 
 \begin{lstlisting}[caption={Esempio di regole per la gestione dei token OAuth 2.0},captionpos=b,label=opa_jwt]
     # controllo dei permessi dell'utente
@@ -69,25 +69,25 @@ si sfruttano le funzioni built-in menzionate all'inizio di questo paragrafo.
     }
 \end{lstlisting}
 Come mostrato nel Codice \ref{opa_jwt}, \texttt{io.jwt.decode} è uno dei metodi che OPA offre per l'estrazione dei dati da un token.
-Tramite quanto ottenuto, possiamo verificare se i gruppi associati all'utente possano effettivamente usufruire del servizio al quale sta tentando di accedere.
+Grazie al risultato di questa operazione, possiamo verificare se i gruppi associati all'utente possano effettivamente usufruire del servizio al quale sta tentando di accedere.
 \\ Le nuove regole inserite verranno richiamate nella clausola \texttt{allow}, in modo da influenzare la decisione finale riguardo l'autorizzazione. 
 \\ OpenPolicyAgent fornisce anche altre funzioni per la gestione dei JWT, che includono la verifica della firma del token, 
-permettendo di progettare delle politiche complesse e che ricoprono molti casi d'uso. 
+permettendo di progettare delle politiche complesse in grado di soddisfare molti casi d'uso. 
 
 \section{Certificati VOMS Proxy}
 Nell'ambito del calcolo distribuito, le \textit{organizzazioni virtuali} (abbrev. VO) rappresentano delle collezioni di gruppi 
 di individui sparsi nel mondo, definiti da una serie di regole riguardo la condivisione delle risorse. 
 \\Il Virtual Organization Membership Service (abbrev. VOMS) è un servizio per il controllo degli accessi 
-nei servizi distribuiti, e implementa
+nei servizi distribuiti, che implementa
 un database per ogni organizzazione virtuale, all'interno del
 quale sono mantenuti i dati relativi ad ogni singolo membro del complesso. Il servizio VOMS è utilizzato quotidiamente da 
-migliaia di scienziati del mondo per autorizzare l'accesso alle risorse dei sistemi distribuiti, per usufruire sia dello storage che della 
+migliaia di scienziati nel mondo per autorizzare l'accesso alle risorse dei sistemi distribuiti, come ad esempio lo storage o la
 loro potenza di calcolo. 
 \\ In questo contesto, le informazioni e gli attributi di un utente che sono gestite da VOMS vengono inserite in un certificato \textit{VOMS Proxy}.
-Dunque, quando un membro di una VO necessita di eseguire un'operazione che richiede autorizzazione (i.e. la sottomissione di un problema in relazione ad un esperimento), 
+Pertanto, quando un membro di una VO necessita di eseguire un'operazione che richiede autorizzazione (i.e. la sottomissione di un problema in relazione ad un esperimento), 
 dovrà includere il certificato nella sua richiesta d'accesso. 
-\\ I certificati VOMS Proxy, come indicato dal nome, vengono usati per autenticarsi attraverso le informazioni di un'altra entità, in questo caso una VO, ed eseguire le operazioni
-per conto di questa. Possiede lo stesso formato di un certificato X.509, con l'eccezione dell'aggiunta di un campo chiamato \textit{attribute certificate} (abbrev. AC),
+\\ I certificati VOMS Proxy, come indicato dal nome stesso, vengono usati per autenticarsi attraverso le informazioni fornite da un'altra entità, in questo caso una VO, ed eseguire le operazioni
+per conto di questa. I certificati possiedono lo stesso formato di un certificato X.509, con l'eccezione dell'aggiunta di un campo chiamato \textit{attribute certificate} (abbrev. AC),
  contenente un altro certificato associato alla VO. 
 \\ Altre informazioni provenienti da questi certificati sono:
 \begin{itemize}
@@ -95,7 +95,8 @@ per conto di questa. Possiede lo stesso formato di un certificato X.509, con l'e
     forma \texttt{/VO[/group[/subgroup(s)]][/Role=role][/Capability=cap]} e indicano il ruolo di ogni utente nel gruppo e nei suoi sottogruppi. 
     \item Informazioni riguardo il certificato dell'utente e dell'ac, tra cui nazione e stato d'origine, organizzazione e common name.   
 \end{itemize}
-Il set disponibile di informazioni rigurado l'utente fornisce una certa granularità nella progettazione delle regole del controllo degli accessi. 
+L'esteso set disponibile di informazioni che è possibile associare a ciascun utente permette di fornire
+ una notevole flessibilità e specificità nella progettazione delle regole del controllo degli accessi. 
 
 \subsection{HTTPG}
 Il sistema VOMS e i certificati VOMS Proxy sono impiegati principalmente per la comunicazione attraverso \textit{Grid Security Infrastructure} (abbrev. GSI), ovvero 
@@ -114,12 +115,14 @@ dell'integrazione a VOMS Proxy presentano un AC associato a questa VO, e present
 \subsection{Integrazione dei VOMS Proxy}
 L'integrazione del supporto all'autorizzazione tramite certificati VOMS Proxy comporta la riconfigurazione del reverse proxy, 
 siccome l'uso di questi certificati richiede una modifica nel protocollo di comunicazione. 
-\\ La sezione di Software Development dell'INFN CNAF ha sviluppato una patch di NGINX per abilitare la comunicazione tramite HTTPG ed estrarre automaticamente le informazioni dai VOMS Proxy.
-Nonostante ciò, questo aggiornamento è richiede un sottosistema basato su \textit{OpenResty}, un branch di NGINX che supporta moduli scritti in linguaggio Lua. 
+\\ La sezione di Software Development dell'INFN CNAF ha sviluppato una patch di NGINX per abilitare la comunicazione 
+tramite HTTPG ed estrarre automaticamente le informazioni dai VOMS Proxy.
+Questo aggiornamento richiede un sottosistema basato su \textit{OpenResty}, un branch di NGINX che supporta moduli scritti in linguaggio Lua. 
 Il processo di configurazione di OpenResty
  rimane pressocché lo stesso del software originale, dunque i file di configurazione e le impostazioni sono riutilizzabili 
-senza che vi siano alterazioni. Per questo motivo, si è deciso di reimplementare il reverse proxy usando questa versione modificata di NGINX. 
-\\ Tramite queste modifiche, lo sviluppo del supporto ai certificati VOMS consiste principalmente nell'inserimento da parte del reverse proxy 
+senza che vi siano alterazioni. 
+Si è deciso quindi di reimplementare il reverse proxy usando questa versione modificata di NGINX, sfruttando la patch per la gestione dei VOMS Proxy. 
+\\ Lo sviluppo del supporto ai certificati VOMS consiste principalmente nell'inserimento da parte del reverse proxy 
 delle informazioni estratte dal certificato in variabili interne ad OpenResty. 
 
 \begin{lstlisting}[caption={Assegnazione di variabili in OpenResty},captionpos=b,label=openresty_var]
@@ -135,8 +138,8 @@ e le inserisce nel pacchetto destinato a OpenPolicyAgent.
 \\Un esempio di assegnazione di valori in variabili interne a 
 OpenResty è visibile nel Codice \ref{openresty_var}.
 \\ Per permettere che le informazioni contenute nei VOMS influenzino il processo di decision-making del controllo degli accessi,
- è necessaria l'aggiunta di regole aggiuntive. La loro semantica e sintassi sarà simile a quanto illustrato nel Codice \ref*{opa_policy},
+ è necessario l'inserimento nelle policy di regole aggiuntive. La loro semantica e sintassi sarà simile a quanto illustrato nel Codice \ref*{opa_policy},
 tuttavia si farà riferimento ad una VO rispetto a un ruolo o a un gruppo.
-\\ \\ \textcolor{blue}{[da aggiungere a conclusioni]}Il sistema di autorizzazione, con l'aggiunta del supporto all'autorizzazione tramite token OAuth e certificati VOMS, riesce ad ottenere informazioni 
+\\ \\ Il sistema di autorizzazione, con l'aggiunta del supporto all'autorizzazione tramite token OAuth e certificati VOMS, riesce ad ottenere informazioni 
 da due tecniche di autenticazione molto diverse e a formulare delle decisioni legate al controllo dell'accesso, senza che queste siano mutualmente esclusive. 
 

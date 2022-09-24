@@ -46,8 +46,7 @@ in qualsiasi momento, tramite una richiesta all'API. Solamente chi ha accesso al
 
 
 \subsection{NGINX}
-\textit{NGINX} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e del 
-service server. 
+\textit{NGINX} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e dell'application server. 
 È conosciuto per la sua stabilità, semplicità di configurazione, estensibilità e consumo di risorse molto basso, infatti:
 \begin{itemize}
     \item 
@@ -213,7 +212,7 @@ I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoin
         });
     }
 \end{lstlisting}
-In base alla risposta del sistema di politche, il reverse proxy inoltrerà il pacchetto originale al service server con la keyword \texttt{proxy\_pass}, 
+In base alla risposta del sistema di politche, il reverse proxy inoltrerà il pacchetto originale all'application server con la keyword \texttt{proxy\_pass}, 
 oppure terminerà la gestione della richiesta.
 La parola chiave \texttt{internal} alle righe 10 e 23 del Codice \ref{nginx_rp}  garantisce che le locazioni 
 associate all'interrogazione di OpenPolicyAgent possano essere accedute esclusivamente da sottorichieste interne al reverse proxy. 
@@ -223,11 +222,11 @@ Dunque, è essenziale l'aggiunta di un passo aggiuntivo che converta gli header 
 JSON comprensibili da OPA. 
 
 
-\subsection{Service server}
-Come descritto nella Sezione \ref*{serv_server}, con service server si intende un servizio qualsiasi che sfrutta 
+\subsection{Application server}
+Come descritto nella Sezione \ref*{serv_server}, con application server si intende un servizio qualsiasi che sfrutta 
 l'infrastruttura di autorizzazione. 
 Siccome questa fase del progetto si focalizza sullo sviluppo corretto delle componenti dedicate 
-al filtraggio delle richieste, il service server è dato da una API relativamente elementare. \\
+al filtraggio delle richieste, l'application server è dato da una API relativamente elementare. \\
 L'API in questione ritorna una risposta generica con Status Code 200 se si accede correttamente all'endpoint \texttt{/operation}, 
 mentre una richiesta a \texttt{/operation/image\_request} permette lo scaricamento di 
 un'immagine. Siccome queste locazioni presentano il prefisso "operation", il loro accesso comporta l'uso 
@@ -235,7 +234,7 @@ del sistema di autorizzazione.
 
 La modalità web server di NGINX permette di implementare quanto appena descritto.
 \lstset{language=nginx}
-\begin{lstlisting}[caption={Frammento di codice del service server},captionpos=b,label=nginx_web]
+\begin{lstlisting}[caption={Frammento di codice dell'application server},captionpos=b,label=nginx_web]
     # invia 200 se si esegue l'operazione con successo
     location /operation {
         return 200;
