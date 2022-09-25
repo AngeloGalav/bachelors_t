@@ -1,50 +1,59 @@
-Durante le fasi di sviluppo iniziali, il servizio collegato al sistema di autenticazione era dato da una API
-elementare. Quest'ultima non presentava delle funzionalità significative: la sua creazione era totalmente 
-a sostegno del sistema di autorizzazione, dunque il carattere del servizio fornito e la sua complessità non erano 
-di estrema rilevanza.  
+Durante le fasi di sviluppo iniziali, il servizio collegato al sistema di autenticazione era dato da un'API
+elementare e senza funzionalità significative.
 \\ Tuttavia, per quanto un'impostazione simile possa essere utile ai fini dell'implementazione del sistema, non 
-permette di valutare correttamente le caratteristiche del Proof-of-Concept.
+permette di valutare correttamente le caratteristiche di un Proof-of-Concept.
 \\ In questa sezione verrà mostrato il processo di interfacciamento del sistema con un servizio 
-realistico e complesso, analizzando le modifiche necessarie per abilitare un controllo degli accesso
+realistico e complesso, analizzando le modifiche necessarie per abilitare il controllo degli accessi
 nei suoi endpoint. 
+
 \section{Storm-Tape}
-\textit{STOrage Resource Manager} (o StoRM) è un servizio dedicato alla gestione della memoria 
-di massa nei centri di computazione distribuita. \\ In relazione a questo, \textit{Storm-Tape API} è un progetto sviluppato
- attivamente all'INFN CNAF, che nella data di scrittura di questa tesi è in fase di Proof-of-Concept.
- \textcolor{blue}{[correggimi se sto sbagliando qui giaco]}
+Gli storage dei grid computazionali presentano generalmente un sistema di memoria basato su nastri (da cui deriva il nome Storm-Tape). 
+Questi sistemi sono costituiti da una libreria di nastri etichettati con un codice a barre. Per accedere o modificare i dati di un file, 
+un braccio robotico individua il relativo nastro e lo inserisce all'interno di un lettore.
+\\ \textit{STOrage Resource Manager} (abbrev. StoRM) è un servizio dedicato alla gestione della memoria 
+di massa nei centri di computazione distribuita. \\ In relazione a questo, \textit{Storm-Tape} è un progetto sviluppato
+ attivamente dalla sezione di Software Development dell'INFN CNAF, che nella data di scrittura di questa tesi è in fase di Proof-of-Concept.
 Consiste in un'implementazione della specifica {WLCG Tape REST API}, che offre un'interfaccia comune per permettere 
-ai client di gestire la residenza dei dati mantenuti negli storage dati dei GRID di tutto il mondo. 
-\\ Il nome Storm-Tape deriva dal fatto che, nei centri di calcolo distribuiti,
- le informazioni vengono mantenute in dischi basati su nastro, in quanto permettono di memorizzare 
-grandi moli di dati con un costo relativamente basso. \\
-Il più grande difetto deCome si può intuire, questo servizio è dedicato esclusivamente ai sistemi che fanno uso di memoria basata su nastro. 
-Nei sistemi grid con memoria di massa basata su nastro, 
-Le funzionalità che fornisce questa API sono illustrate nella Tabella \ref*{tab:table-name}.
+ai client di gestire la residenza dei dati mantenuti negli storage dati dei grid. 
+\\ Le funzionalità fornite dall'API sono illustrate nella Tabella \ref*{tab:table-name}. A ciascuna di esse è associato un endpoint,
+ che si comporta in modo diverso in base al metodo HTTP della richiesta inviata ad esso. 
+
 \begin{table}
 \begin{center}
-\begin{tabular}{ | m{8em} | m{19em} | } 
+\begin{tabular}{ | m{7em} | m{15em} | m{7em} | } 
   \hline
-  \textbf{Funzionalità} & \textbf{Descrizione} \\ 
+  \textbf{Funzionalità} & \textbf{Descrizione} & \textbf{Metodi HTTP}\\ 
   \hline
-  \texttt{STAGE} & Richiede che i file mantenuti su un determinato siano resi disponibili con latenza di un disco rigido. \\ 
+  \texttt{STAGE} & Richiede che i file mantenuti su un determinato siano resi disponibili con latenza di un disco rigido. & \texttt{POST}, \texttt{DELETE}, \texttt{GET}\\ 
   \hline
-  \texttt{RELEASE} & Indica che i file precedentemente resi disponibili non sono più richiesti.   \\ 
+  \texttt{RELEASE} & Indica che i file precedentemente resi disponibili non sono più richiesti. & \texttt{POST}\\ 
   \hline
-  \texttt{ARCHIVEINFO} & Richiede informazioni riguardo il progresso della scrittura dei file su nastro. \\ 
+  \texttt{ARCHIVEINFO} & Richiede informazioni riguardo il progresso della scrittura dei file su nastro. & \texttt{GET}\\ 
   \hline
 \end{tabular}
 \caption{\label{tab:table-name} Insieme delle operazioni fornite dalla specifica WLCG Tape REST API}
 \end{center}
 \end{table}
-\textcolor{blue}{[da inserire maggiori info riguardo l'API, es. endpoint]}
 
 \section{Interfacciare il sistema con il servizio}
-\section{Risultati}
+L'interfacciamento del sistema con il servizio richiede delle alterazioni alla configurazione del reverse proxy. In particolare, 
+il modulo NJS adibito all'invio delle informazioni ad OpenPolicyAgent deve analizzare l'endpoint e il metodo della richiesta per 
+determinare il tipo di operazione che l'utente sta svolgendo.
+\\ La prima modifica consiste nel cambiamento della location "protetta", che porta a un controllo dell'accesso, 
+facendo sì che rifletti la locazione associata all'API di Storm-Tape.  
+\\ Il metodo HTTP e l'URI della richiesta sono reperibili attraverso delle variabili built-in di NGINX e assegnabili 
+a delle variabili generiche, in modo simile a quanto svolto
+nel Codice \ref*{openresty_var} per l'estrazione delle informazioni dai VOMS Proxy. In questo modo, è possibile accedere ai due dati dal modulo NJS,
+ e possono essere utilizzati per stabilire il carattere dell'operazione richiesta dall'utente. Il processo di creazione della query e il suo invio al
+  sistema di politiche rimane inalterato dal modulo originale. 
+\\ Le regole delle politiche di OPA non richiedono modifiche, purché si voglia mantenere un controllo degli accessi basato su RBAC. Ciò implica che è possibile usare JWT e VOMS Proxy 
+per autorizzare il client, senza l'aggiunta di ulteriori funzioni. 
+\\ Nonostante ciò, il database contenente le informazioni sui ruoli deve essere riscritto in modo da essere coerente con 
+le funzionalità che fornisce Storm-Tape. 
 
-
-\textcolor{blue}{[Perché questo?]}
-\textcolor{blue}{[Cos'è e come funziona storm-tape API?]}
-\textcolor{blue}{[Quali sono le modifiche necessarie per far funzionare il sistema?]}
-\textcolor{blue}{[Che conclusioni hai tratto?]}
-\textcolor{blue}{[È facile cambiare? Come avviene in generale il cambiamento? Cosa se ne trae?]}
+\subsection{Risultati}
+Le modifiche richieste per proteggere il servizio tramite il sistema di autorizzazione sono poche e 
+non influenzano in modo significativo le politiche. Questo fatto dimostra la versatilità del sistema, 
+siccome richiede poche alterazioni per essere compatibile con un servizio di carattere molto diverso 
+dall'application server originale.   
 
