@@ -5,6 +5,7 @@
 \usepackage{newlfont}
 \usepackage{pdfpages}
 \usepackage{colortbl}
+\usepackage{afterpage}
 \usepackage{float}
 \usepackage{graphicx}
 \usepackage{listings}
@@ -42,22 +43,33 @@
 	\raggedleft
 	\large
 	\em
-	Dedica qui,\linebreak
-	Dedica qui 2.\linebreak
+	Alla migliore madre del mondo,\linebreak
+	al migliore padre del mondo.\linebreak
 	\newpage
 	\clearpage{\pagestyle{empty}\cleardoublepage}
 \end{titlepage}
 \clearpage{\pagestyle{empty}\cleardoublepage}
 \selectlanguage{italian}
 \begin{abstract}
-	\setcounter{page}{2}
-	Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent sit amet lacus nulla. Proin quis nibh vel risus rutrum cursus quis ac dui. Integer nec mollis diam. Sed eget nisl sit amet sem maximus faucibus vel a sem. In hac habitasse platea dictumst. Vivamus a commodo ante. Aliquam erat volutpat. Suspendisse eu porttitor sem, nec porta mi. Etiam et risus euismod, gravida justo nec, pulvinar nulla. Pellentesque finibus tristique mauris, quis molestie nibh consequat nec.
+	\setcounter{page}{3}
+	\pagenumbering{roman}
+	Il Worldwide LHC Computing Grid (WLCG) è un progetto dato dalla collaborazione 
+	delle infrastrutture di calcolo distribuito di tutto il mondo. Uno dei centri di calcolo 
+	di questa struttura risiede al centro CNAF dell'Istituto Nazionale di Fisica Nucleare a Bologna, che si occupa di sviluppare e 
+	gestire middleware dedicati all'infrastruttura grid del WLCG. Molti di questi richiedono un servizio di autorizzazione, e 
+	siccome i progetti hanno funzionalità e scopi diversi, è necessaria una soluzione che sia general-purpose e che sia compatibile 
+	con le tecniche di autenticazione adottate dal WLCG, ossia l'autenticazione basata su token OAuth 2.0 e su certificati VOMS Proxy. 
+	\\In questa tesi si analizzerà l'architettura e l'implementazione di un proof-of-concept di un sistema di autorizzazione che soddisfi queste necessità, 
+	facendo enfasi sull'integrazione delle tecniche di autenticazione citate. Per dimostrare la sua versatilità, verrà
+	 illustrato il processo di interfacciamento con un sistema realistico attualmente in sviluppo al CNAF. 
+	\\Il risultato finale ottenuto è un sistema che rispetta i vincoli richiesti ed si integra facilmente con servizi eterogenei. 
 
-Praesent pretium finibus turpis, sit amet sodales sem facilisis non. Nullam nisi eros, convallis in diam in, faucibus maximus justo. Mauris eu auctor erat, et tristique libero. Praesent pretium gravida magna, a faucibus neque posuere sit amet. Etiam tellus lacus, viverra sit amet dignissim in, eleifend vel diam. In hac habitasse platea dictumst. Nam ornare est nunc, ac interdum turpis rhoncus vitae. Aenean id neque diam. Nunc ac accumsan lectus. Ut vehicula luctus risus eget dignissim. Quisque sed justo non erat vestibulum consectetur vel a diam.
+
 
 \end{abstract}
 \clearpage{\pagestyle{empty}\cleardoublepage}
 \selectlanguage{italian}
+\clearpage{\pagestyle{empty}\cleardoublepage}
 \tableofcontents
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 \listoffigures
@@ -95,5 +107,18 @@ Praesent pretium finibus turpis, sit amet sodales sem facilisis non. Nullam nisi
 \input{chapters/bibliography.tex}
 
 \chapter*{Ringraziamenti}
-bho non so ancora chi ringraziare onestamente
+Ringrazio il professor Ozalp Babaoglu per la sua disponibilità come relatore, nonostante fosse prossimo alla pensione. 
+Sono molto grato di essere uno dei suoi ultimi tesisti della sua carriera. I suoi contributi nell'ambito dei sistemi operativi sono inestimabili.  
+
+
+Ringrazio il professor Francesco Giacomini, per avermi dato l'accesso ad una delle esperienze formative più importanti della mia vita. Lo ringrazio 
+inoltre per assistermi attentamente nello sviluppo del progetto e nella scrittura di questa tesi. Grazie anche per la tua pazienza nei miei confronti.  
+
+Ringrazio tutto il personale dell'INFN CNAF per aver reso l'esperienza ancora più gradevole e per avermi fatto visitare il centro di calcolo, trattandomi sempre come se fossi un vostro collega.  
+
+Un ringraziamento speciale va alla mia famiglia, per avermi sempre dato la spinta di andare avanti e per credere in me, senza negarmi mai nulla. 
+
+Infine, ringrazio tutti gli amici che ho conosciuto nel corso durante questi tre anni, e Leti, per essermi stata accanto nei momenti più bui ed avermi dato tutto l'affetto che esiste in questo mondo, anche quando non me lo meritavo.  
+
+
 \end{document}

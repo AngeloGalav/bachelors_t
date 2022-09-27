@@ -1,7 +1,7 @@
 Durante le fasi di sviluppo iniziali, il servizio collegato al sistema di autenticazione era dato da un'API
 elementare e senza funzionalità significative.
 \\ Tuttavia, per quanto un'impostazione simile possa essere utile ai fini dell'implementazione del sistema, non 
-permette di valutare correttamente le caratteristiche di un Proof-of-Concept.
+permette di valutare correttamente le caratteristiche di un proof-of-concept.
 \\ In questa sezione verrà mostrato il processo di interfacciamento del sistema con un servizio 
 realistico e complesso, analizzando le modifiche necessarie per abilitare il controllo degli accessi
 nei suoi endpoint. 
@@ -10,9 +10,9 @@ nei suoi endpoint.
 Gli storage dei grid computazionali presentano generalmente un sistema di memoria basato su nastri (da cui deriva il nome Storm-Tape). 
 Questi sistemi sono costituiti da una libreria di nastri etichettati con un codice a barre. Per accedere o modificare i dati di un file, 
 un braccio robotico individua il relativo nastro e lo inserisce all'interno di un lettore.
-\\ \textit{STOrage Resource Manager} (abbrev. StoRM) è un servizio dedicato alla gestione della memoria 
+\\ \textit{STOrage Resource Manager} (StoRM) è un servizio dedicato alla gestione della memoria 
 di massa nei centri di computazione distribuita. \\ In relazione a questo, \textit{Storm-Tape} è un progetto sviluppato
- attivamente dalla sezione di Software Development dell'INFN CNAF, che nella data di scrittura di questa tesi è in fase di Proof-of-Concept.
+ attivamente dalla sezione di Software Development dell'INFN CNAF, che nella data di scrittura di questa tesi è in fase di proof-of-concept.
 Consiste in un'implementazione della specifica {WLCG Tape REST API}, che offre un'interfaccia comune per permettere 
 ai client di gestire la residenza dei dati mantenuti negli storage dati dei grid. 
 \\ Le funzionalità fornite dall'API sono illustrate nella Tabella \ref*{tab:table-name}. A ciascuna di esse è associato un endpoint,
@@ -20,15 +20,15 @@ ai client di gestire la residenza dei dati mantenuti negli storage dati dei grid
 
 \begin{table}
 \begin{center}
-\begin{tabular}{ | m{7em} | m{15em} | m{7em} | } 
+\begin{tabular}{ | m{7em} | m{18em} | } 
   \hline
-  \textbf{Funzionalità} & \textbf{Descrizione} & \textbf{Metodi HTTP}\\ 
+  \textbf{Funzionalità} & \textbf{Descrizione} \\ 
   \hline
-  \texttt{STAGE} & Richiede che i file mantenuti su un determinato siano resi disponibili con latenza di un disco rigido. & \texttt{POST}, \texttt{DELETE}, \texttt{GET}\\ 
+  \texttt{STAGE} & Richiede che i file mantenuti su un determinato siano resi disponibili con latenza di un disco rigido. \\ 
   \hline
-  \texttt{RELEASE} & Indica che i file precedentemente resi disponibili non sono più richiesti. & \texttt{POST}\\ 
+  \texttt{RELEASE} & Indica che i file precedentemente resi disponibili non sono più richiesti. \\ 
   \hline
-  \texttt{ARCHIVEINFO} & Richiede informazioni riguardo il progresso della scrittura dei file su nastro. & \texttt{GET}\\ 
+  \texttt{ARCHIVEINFO} & Richiede informazioni riguardo il progresso della scrittura dei file su nastro. \\ 
   \hline
 \end{tabular}
 \caption{\label{tab:table-name} Insieme delle operazioni fornite dalla specifica WLCG Tape REST API}

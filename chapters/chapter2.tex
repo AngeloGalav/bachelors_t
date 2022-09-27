@@ -31,15 +31,17 @@ Infatti, il reverse proxy inoltra o ignora le richieste all'application server, 
  
 \subsection{Sistema di politiche}
 Il sistema di politiche è la parte che determina come la richiesta dovrà essere gestita. 
-\\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, che devono essere propriamente formattate per essere comprese correttamente. 
-Dopodiché, le confronta con dati quali politiche e permessi, ai quali ha accesso diretto.
+\\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, 
+che devono essere propriamente formattate per essere comprese correttamente. 
+Dopodiché, applica le regole d'accesso e confronta i dati con i permessi, ai quali ha accesso diretto.
 Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito.  
 
 \subsection{Application server} \label{serv_server}
-Con application server si intende il servizio che sfrutta il sistema di autorizzazione. Come tale, il suo ciclo d'esecuzione consiste nel gestire 
+Con application server si intende il servizio che sfrutta il sistema di autorizzazione. Come tale,
+ il suo ciclo d'esecuzione consiste nel gestire 
 le richieste provenienti dagli utenti tramite
  il reverse proxy e formulare una risposta.
-Questa viene indirezionata al mittente iniziale, senza che sia filtrata o analizzata, ma attraversando comunque il proxy.
+Questa viene inoltrata al mittente iniziale, senza che sia filtrata o analizzata, ma attraversando comunque il proxy.
 
 \begin{figure}[h]
     \includegraphics[width=13cm]{topologia.png}

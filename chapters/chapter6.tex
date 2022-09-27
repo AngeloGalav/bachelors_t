@@ -1,9 +1,9 @@
 Nei capitoli precedenti è stato illustrato l'intero processo di realizzazione del sistema, partendo dalla
-progettazione architetturale e evolvendolo gradualmente tramite l'aggiunta di nuove feature, che includono il supporto a 
-differenti tecnologie di autenticazione e alla comunicazione crittografata. 
+progettazione architetturale e evolvendolo gradualmente tramite l'aggiunta di nuove funzionalità, che includono il supporto alla comunicazione crittografata 
+e a differenti tecnologie di autenticazione. 
 \\ Il Capitolo 6 ha mostrato la facilità 
 con cui questo sistema riesce ad integrarsi con un servizio già esistente, senza richiedere una 
-riprogrammazione totale delle componenti, ma modificando le policy esistenti e il modulo dedicato alla formattazione dei dati. 
+riprogrammazione totale delle componenti, ma modificando il modulo dedicato alla formattazione dei dati. 
 \\ Nel presente capitolo verranno esposte alcune proposte di sviluppi futuri emerse durante l'implementazione, assieme a una riflessione
  sui risultati a progetto realizzato. 
 
@@ -23,7 +23,7 @@ Un'estensione del genere abiliterebbe un qualsiasi utente privilegiato a modific
 \\ Seguendo questo pricipio, una possibile implementazone potrebbe impiegare l'uso di policy di OPA per applicare un controllo degli accessi 
 riguardo la modifica delle policy stesse, il che rappresenterebbe un caso di studio decisamente curioso. 
 
-\subsection{Migliorie nella gestione dei VOMS Proxy}
+\subsection{\textcolor{blue}{[CAMBIA CON CAPA BASED E ACCESSO DIRETTO A OPA]}}
 Nel Capitolo 4 si è trattato di come il sistema gestisce i certificati VOMS Proxy. 
 Come citato, il modulo al momento disponibile per la validazione dei VOMS Proxy necessita dell'uso di OpenResty, 
 ossia una versione modificata da terze 
@@ -36,7 +36,7 @@ l'estensione di NGINX con funzionalità personalizzate.
 risulterebbe totalmente affidato all'implementazione standard NGINX.
 
 \section{Osservazioni finali}
-L'obiettivo fondamentale di un Proof-of-Concept consiste nel dimostrare la realizzabilità 
+L'obiettivo fondamentale di un proof-of-concept consiste nel dimostrare la realizzabilità 
 di un sistema, mi ritengo soddisfatto del risultato finale ottenuto. L'infrastruttura ricalca l'obiettivo 
 posto da questa tesi, realizzando un controllo efficace degli accessi e interfacciandosi 
 con poche modifiche ad altri servizi.  

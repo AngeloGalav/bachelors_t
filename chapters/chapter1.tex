@@ -1,22 +1,57 @@
-\textcolor{blue}{[cos'è la sicurezza? cos'è il controllo degli accessi?]}
+I due concetti fondamentali nell'ambito della
+ sicurezza sono quelli \textit{autenticazione} e \textit{autorizzazione}.
+ \\ Con autenticazione si intende l'atto di confermare l'identità di un utente. 
+ L'autorizzazione, invece, indica la funzione che specifica i privilegi di accesso a determinate risorse o servizi.
+\\I due processi sono interamente interconnessi: l'autorizzazione fa uso dei dati provenienti 
+dall'autenticazione, e in base a questi stabilisce i 
+permessi che un'entità possiede.
+\\ In informatica, l'autorizzazione si basa sulle politiche d'accesso, che vengono utilizzate per determinare se 
+una richiesta d'accesso a una risorsa da parte di un utente autenticato deve essere approvata o rifiutata.
+\\ Il processo del controllo degli accessi è composto da due stadi principali: una fase decisionale, in cui si valutano i permessi dell'utente 
+ formulando una decisione in base alle politiche d'accesso del sistema,
+e una fase esecutiva, in cui si applica effettivamente quanto è stato deciso. 
 
-\section{Autorizzazione e autenticazione}
-\textcolor{blue}{[aggiungeer roba sulla storia?]}
-I concetti di \textit{"autorizzazione"} e \textit{"autenticazione"} rappresentano due nuclei fondamentali nell'ambito 
-della sicurezza informatica. Con \textit{autorizzazione} si intende la funzione che specifica i privilegi di accesso a determinate risorse o servizi. 
-L'\textit{autenticazione}, invece, rappresenta l'atto di confermare la verità dell'identità di un utente.
-Essenzialmente, il prcoesso di autorizzazione fa uso dei dati provenienti dal processo di autenticazione, e in base a questi stabilisce i 
-permessi che un utente possiede.
-\textcolor{blue}{[cos'è un IAM? come si collega con il progetto? chi è stato?]}
-\textcolor{blue}{[com'è sviluppato attualmente un tipico sistema di autorizzazione?]}
+\section{Worldwide LHC Computing Grid}
+Nell'ambito del calcolo distribuito, il \textit{grid computing} consiste 
+nell'uso di una rete di risorse computazionali distribuite geograficamente che collaborano 
+per raggiungere un determinato obiettivo.
+\\ Il \textit{Worldwide LHC Computing Grid} (WLCG) \cite{wlcg_doc} è un progetto dato dalla collaborazione 
+delle infrastrutture grid sparse in tutto il mondo, con l'obiettivo
+di analizzare i dati generati dal \textit{Large Hadron Collider} (LHC) \cite{cern_lhc}, 
+l'acceleratore di particelle situato nel CERN di Ginevra. 
+\begin{figure}[h]
+    \includegraphics[width=10cm]{map.png}
+    \centering
+    \caption{Locazione geografica dei centri di calcolo del Worldwide LHC Computing Grid}
+    \label{mappa}
+\end{figure}
 
-\section{Contesto dell'operato}
-\textcolor{blue}{[Migliorare coesione dei concetti]}
-\textcolor{blue}{[cos'è l'INFN?]}
-\textcolor{blue}{[come mai questo progetto? tipi di autenticazione?]}
-\textcolor{blue}{[obiettivo della tesi?]}
+Ad oggi, il WLCG incorpora circa 170 centri di calcolo sparsi in 42 paesi. 
+Uno di questi risiede nel centro CNAF dell'Istituto Nazionale di Fisica Nucleare (INFN) \cite{infn_cnaf} a Bologna, e
+ rappresenta uno dei principali centri di calcolo di questa associazione. Come tale, il CNAF si occupa
+  della gestione e dello sviluppo del middleware associato all'infrastruttura grid del WLCG. 
+
+
+\section{Scopo del progetto}
+Molti dei sistemi software sviluppati al CNAF richiedono un sistema di autorizzazione. Siccome si tratta di progetti aventi scopi e funzionalità diverse,
+implementare 
+il controllo degli accessi direttamente in essi risulterebbe ridondante e potrebbe portare a problemi di ambiguità 
+se le politiche sono implementate in modo diverso per ogni componente.
+\\ Il progetto sviluppato in questa tesi consiste nello sviluppo di una soluzione a questo problema, ovvero un proof-of-concept di 
+un sistema di autorizzazione general-purpose. Siccome si interfaccerà potenzialmente con progetti in relazione al WLCG, il sistema deve essere compatibile
+ con le tecniche di autenticazione adottate dai suoi servizi.
+\\ Attualmente, il WLCG si trova in una fase di transizione dall'autenticazione basata su certificati proxy in favore all'uso dei token OAuth 2.0.
+ Dunque, è necessario che il sistema sia compatibile con entrambi i metodi. 
+\\Un altro vincolo riguarda l'implementazione: i componenti del sistema devono basarsi su strumenti software d'industria prontamente disponibili,
+ in modo da assicurarne 
+la stabilità e l'affidabilità.  
 
 \section{Struttura del documento}
-In questa tesi verrà esposta una leggera introduzione su alcuni concetti chiave sul contesto e sulle tecnologie in uso. 
-Dopodiché, sarà mostrerà l'implementazione vera e propria dell'intera infrastruttura, aumentando il numero di feautures andando avanti
-con i capitoli. Infine, verrà illustrata un'analisi delle performance e verranno fatte le ultime conclusioni.  
+Questa tesi si focalizzerà su un'analisi dettagliata del sistema creato, aiutandosi con schemi e frammenti 
+di codice a supporto della spiegazione.
+\\ Il Capitolo 2 è dedicato alla descrizione architetturale, analizzandone i componenti. 
+\\ Il Capitolo 3 mostra i dettagli implementativi del sistema motivandoli e i software sul quale si basa, con un accenno alle tecniche di testing. 
+\\ Il Capitolo 4 spiega le tecniche di autenticazione supportate dall'infrastruttura, e come è stata gestita la loro integrazione.  
+\\ Il Capitolo 5 descrive il processo di interfacciamento con un servizio esistente. 
+\\ Infine, il Capitolo 6 tratterà dei risultati di quanto è stato creato, proponendo 
+dei possibili miglioramenti e aggiungendo una riflessione personale sul lavoro svolto. 

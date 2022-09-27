@@ -18,7 +18,8 @@ che saranno descritti nei paragrafi successivi.
 
 
 \subsection{OpenPolicyAgent}
-\textit{OpenPolicyAgent} (abbrev. in OPA) è un software open source che permette di separare il processo di decision-making 
+\textit{OpenPolicyAgent} (in OPA) è un software open source che permette di separare il processo di
+ decision-making 
 durante l'autorizzazione dall'applicazione rigorosa delle politiche.
 \\ Consideriamo un servizio che richiede di stabilire se un utente possiede dei determinati diritti d'accesso.
 OPA permette di gestire il problema decisionale analizzando le informazioni su di esso, ricevute attraverso un'interrogazione da parte del servizio. 
@@ -31,7 +32,8 @@ agenti, senza la necessità di codice ridondante.
     \caption{Meccanismo di operazione di OpenPolicyAgent}
     \label{OPAWork}
 \end{figure} 
-La Figura \ref*{OPAWork} mostra in modo schematico la gestione tipica di una richiesta: un servizio invia un'interrogazione e OPA valuta i dati a sua disposizione per formulare una decisione e restituirla. 
+La Figura \ref*{OPAWork} mostra in modo schematico la gestione tipica di una richiesta: un servizio invia un'interrogazione
+ e OPA valuta i dati a sua disposizione per formulare una decisione e restituirla. 
 Le informazioni della richiesta sono definiti in formato JSON, tuttavia sono strutturati in modo totalmente arbitrario. 
 \\ Le politiche (o policy) devono essere rappresentate attraverso il linguaggio dichiarativo 
 \textit{Rego}, la cui sintassi si ispira al linguaggio 
@@ -39,7 +41,7 @@ di interrogazione \textit{Datalog}.
 Attraverso Rego, le regole si esprimono come delle asserzione sui dati mantenuti da OPA.
 Il codice dedicato alle politiche diventa così molto conciso rispetto ad un loro equivalente in 
 linguaggio imperativo. 
-\\ Un'altra feature molto interessante di questo software sta nella funzionalità dell'API della pol. In questo modo, una politica può essere modificata o inserita 
+\\ Un'altra funzionalità molto interessante di questo software sta nell'API della pol \textcolor{blue}{[QUI]}. In questo modo, una politica può essere modificata o inserita 
 in qualsiasi momento, tramite una richiesta all'API. Solamente chi ha accesso alla rete interna può usufruire di questa funzione. 
 \\ OpenPolicyAgent è il software che gestisce interamente il sistema di politiche. Oltra a formulare una decisione,
  infatti, coordina la ricezione delle informazioni e la trasmissione del risultato.  
@@ -66,9 +68,11 @@ Per queste ragione Nginx è stato preferito ad altri sowtware similari.
 in unità isolate chiamate \textit{container}, includendo anche le sue dipendenze. L'obiettivo di un container è quello di 
 facilitare la distribuzione di un applicativo software, permettendone l'esecuzione a prescindere dal sistema operativo 
 in uso dall'utente. 
-\\ Docker fornisce lo strumento \textit{Compose}, che permette di definire delle applicazioni singole a più container, 
-che comunicano fra loro su una rete privata. In questo modo è possibile creare facilmente un ambiente di sviluppo avente 
-un funzionamento e struttura analoghe al sistema finale. Le caratteristiche dei container e i collegamenti fra questi vengono definite tramite un file di configurazione in YAML. 
+\\ Docker fornisce lo strumento \textit{Compose}, che permette di orchestrare dei servizi singoli a più container, 
+che comunicano fra loro su una rete privata. In questo modo è possibile creare facilmente una configurazione per lo schieramento dei sistemi in fase di produzione, 
+nonché un ambiente di sviluppo avente 
+un funzionamento e struttura analoghi al sistema finale. Le caratteristiche dei container e i collegamenti fra questi
+ vengono definite tramite un file di configurazione in YAML. 
 
 
 \section{Implementazione delle componenti}
@@ -78,7 +82,7 @@ elemento è stato virtualizzato attraverso un container, che svolge il suo compi
 
 
 \subsection{Sistema di politiche}
-Il sistema di autorizzazione usa un approccio \textit{Role-Based Access Control} (abbrev. in RBAC), in cui il 
+Il sistema di autorizzazione scelto in questo lavoro usa un approccio \textit{Role-Based Access Control} (in RBAC), in cui il 
 controllo degli accessi si basa sui diritti associati al ruolo dell'utente. 
 Altre tecniche di controllo degli accessi possono essere implementate cambiando le politiche. Nonostante ciò, 
 questo approccio risulta quello più consono alla dimostrazione delle capacità di OpenPolicyAgent.
@@ -216,9 +220,9 @@ In base alla risposta del sistema di politche, il reverse proxy inoltrerà il pa
 oppure terminerà la gestione della richiesta.
 La parola chiave \texttt{internal} alle righe 10 e 23 del Codice \ref{nginx_rp}  garantisce che le locazioni 
 associate all'interrogazione di OpenPolicyAgent possano essere accedute esclusivamente da sottorichieste interne al reverse proxy. 
-\\ L'uso di un modulo esterno è necessario siccome la clausola \texttt{auth\_request} scarta il campo body della 
+\\ L'uso di un modulo esterno è necessario perché la clausola \texttt{auth\_request} scarta il campo body della 
 richiesta HTTP. Ciò implica che non è possibile inviare una richiesta contenente i dati della query nel suo corpo.
-Dunque, è essenziale l'aggiunta di un passo aggiuntivo che converta gli header HTTP in dati in formato
+Dunque, è essenziale l'aggiunta di un livello di indirezione che converta gli header HTTP in dati in formato
 JSON comprensibili da OPA. 
 
 
@@ -272,7 +276,8 @@ L'impostazione del canale protetto attraverso NGINX avviene inserendo il paramet
 dei socket in ascolto del server. Il percorso del certificato pubblico e della chiave privata devono essere specificati 
 rispettivamente nelle direttive \texttt{ssl\_certificate} e \texttt{ssl\_certificate\_key}. \\
 Il Codice \ref*{nginx_ssl} mostra il setup della protezione SSL/TLS all'interno del reverse proxy del sistema di autorizzazione.
-Allo stato attuale del progetto, i certificati sono dedicati esclusivamente al testing, quindi non sono validi. Va da sé che 
+Allo stato attuale del progetto, i certificati sono dedicati esclusivamente al testing, quindi non sono rilasciati da 
+una Certificate Authority valida. Va da sé che 
 la sostituzione dei certificati stessi
 con una controparte ufficialmente verificata è un processo banale.  
 
