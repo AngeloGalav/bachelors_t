@@ -18,11 +18,18 @@ della fase decisionale dell'autorizzazione, che richiede una gestione delle due 
 
 L'architettura dell'infrastruttura presenta uno scheletro formato da tre componenti di principali: 
 \begin{itemize}
-    \item il \textit{reverse proxy}
     \item il \textit{sistema delle politiche di accesso}
+    \item il \textit{reverse proxy}
     \item il \textit{servizio applicativo}
 \end{itemize}
 Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tuttavia solo le prime due influenzano il processo di autorizzazione. 
+
+\subsection{Sistema delle politiche di accesso}
+Il sistema delle politiche di accesso è la parte che determina come la richiesta dovrà essere gestita. 
+\\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, 
+che devono essere propriamente formattate per essere comprese correttamente. 
+\\ Dopodiché, applica le regole d'accesso e confronta i dati ricevuti con un database dei permessi, al quale ha accesso diretto.
+Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito o meno.  
 
 \subsection{Reverse proxy}
 Il reverse proxy rappresenta l'unico entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
@@ -32,12 +39,6 @@ il reverse proxy prima di giungere al server.
 \\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene effettivamente espresso il concetto di autorizzazione. 
 Infatti, il reverse proxy inoltra o ignora le richieste al servizio applicativo, basandosi sull'output del sistema delle politiche di accesso.  
  
-\subsection{Sistema delle politiche di accesso}
-Il sistema delle politiche di accesso è la parte che determina come la richiesta dovrà essere gestita. 
-\\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, 
-che devono essere propriamente formattate per essere comprese correttamente. 
-\\ Dopodiché, applica le regole d'accesso e confronta i dati ricevuti con un database dei permessi, al quale ha accesso diretto.
-Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito o meno.  
 
 \subsection{Servizio applicativo} \label{serv_server}
 Con servizio applicativo si intende il servizio che usufruisce del sistema di autorizzazione. 

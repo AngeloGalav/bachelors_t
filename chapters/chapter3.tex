@@ -56,8 +56,8 @@ in qualsiasi momento tramite una richiesta all'API. Nel sistema di autorizzazion
     non usa moltecipli thread per gestire le richieste, ma si limita ad un'architettura asincrona a eventi. 
     In questo modo, riesce a gestire un numero alto di connessioni senza che vi siano enormi ripercussioni sulle prestazioni \cite{nginx_doc}. 
     
-    \item Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, e si
-    limita alla creazione di un file con estensione ".config" con le clausole necessarie. 
+    \item Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, limitandosi
+    alla creazione di un file con estensione ".config" con le clausole necessarie. 
     \item NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli esterni attraverso il linguaggio \textit{NJS} \cite{njs_doc}, 
     che consiste in una versione di JavaScript modificata. 
 \end{itemize}
@@ -258,7 +258,7 @@ Spesso un sistema di autorizzaione richiede delle informazioni sensibili riguard
 degli accessi. 
 Per proteggere il flusso dati da possibili intercettazioni è opportuno che la comunicazione fra il servizio e l'utente venga cifrata. 
 \\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmettrica. Il suo funzionamento necessita 
-dei certificati X.509, e in questo modo garantiscono che la chiave pubblica di un host appartenga effettivamente ad esso. 
+dei certificati X.509, che garantiscono che la chiave pubblica di un host appartenga effettivamente ad esso. 
 \\ Nel caso del progetto di questa tesi, solamente la connesione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno
  all'infrastruttura possiede accesso diretto ai componenti.
 NGINX supporta le connessioni SSL/TLS attraverso alcune configurazioni esplicite.

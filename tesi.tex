@@ -54,18 +54,22 @@
 \begin{abstract}
 	\setcounter{page}{3}
 	\pagenumbering{roman}
-	Il Worldwide LHC Computing Grid (WLCG) è un progetto dato dalla collaborazione 
-	delle infrastrutture di calcolo distribuito di tutto il mondo. Uno dei centri di calcolo 
-	di questa struttura risiede al centro CNAF dell'Istituto Nazionale di Fisica Nucleare a Bologna, che si occupa di sviluppare e 
-	gestire middleware dedicati all'infrastruttura grid del WLCG. Molti di questi richiedono un servizio di autorizzazione, e 
-	siccome i progetti hanno funzionalità e scopi diversi, è necessaria una soluzione che sia general-purpose e che sia compatibile 
-	con le tecniche di autenticazione adottate dal WLCG, ossia l'autenticazione basata su token OAuth 2.0 e su certificati VOMS Proxy. 
-	\\In questa tesi si analizzerà l'architettura e l'implementazione di un proof-of-concept di un sistema di autorizzazione che soddisfi queste necessità, 
-	facendo enfasi sull'integrazione delle tecniche di autenticazione citate. Per dimostrare la sua versatilità, verrà
-	 illustrato il processo di interfacciamento con un sistema realistico attualmente in sviluppo al CNAF. 
-	\\Il risultato finale ottenuto è un sistema che rispetta i vincoli richiesti ed si integra facilmente con servizi eterogenei. 
-
-
+	Il Worldwide LHC Computing Grid (WLCG) è una collaborazione internazionale costituita da decine di 
+	centri di di calcolo distribuiti globalmente, la cui missione consiste nell'elaborazione 
+	delle grandi quantità di dati prodotti dai maggiori esperimenti di Fisica delle Alte Energie, in particolare quelli al CERN di Ginevra. 
+	
+	Uno di questi centri di calcolo è ospitato presso il CNAF dell'Istituto Nazionale di Fisica Nucleare a Bologna, che contribuisce anche allo sviluppo 
+	di middleware per la gestione dell'infrastruttura. 
+	
+	Molti componenti di tale middleware, che hanno funzionalità e scopi diversi, 
+	richiedono un servizio di autorizzazione versatile e compatibile con i meccanismi 
+	di autenticazione attualmente in uso, basati su token OAuth 2.0 e su certificati VOMS Proxy.
+	
+	In questa tesi si analizzerà l'architettura e l'implementazione di un proof-of-concept di un sistema di autorizzazione che soddisfi queste necessità, 
+	enfatizzando l'integrazione delle tecniche di autenticazione citate. Per dimostrare la sua versatilità, verrà
+	illustrato il processo di interfacciamento con un componente middleware attualmente in sviluppo al CNAF. 
+	
+	Il risultato finale ottenuto è un sistema che rispetta i vincoli richiesti e si integra facilmente con servizi eterogenei. 
 
 \end{abstract}
 \clearpage{\pagestyle{empty}\cleardoublepage}
@@ -99,7 +103,7 @@
 \lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
 \input{chapters/chapter4.tex}
 
-\chapter{Caso d'uso: interfacciamento con Storm-Tape}
+\chapter{Caso d'uso: interfacciamento con StoRM-Tape}
 \lhead[\fancyplain{}{\bfseries\thepage}]{\fancyplain{}{\bfseries\rightmark}}
 \input{chapters/chapter5.tex}
 

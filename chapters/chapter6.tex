@@ -1,7 +1,7 @@
 Nei capitoli precedenti è stato illustrato l'intero processo di realizzazione del sistema, partendo dalla
 progettazione architetturale e evolvendolo gradualmente tramite l'aggiunta di nuove funzionalità, che includono il supporto alla comunicazione crittografata 
 e a differenti tecnologie di autenticazione. 
-\\ Il Capitolo 6 ha mostrato la facilità 
+\\ Il Capitolo 5 ha mostrato la facilità 
 con cui questo sistema riesce ad integrarsi con un servizio già esistente, senza richiedere una 
 riprogrammazione totale dei componenti, ma modificando il modulo dedicato alla formattazione dei dati. 
 \\ Nel presente capitolo verranno esposte alcune proposte di sviluppi futuri emerse durante l'implementazione, assieme a una riflessione
@@ -25,13 +25,14 @@ riguardo la modifica delle policy stesse, il che rappresenterebbe un caso di stu
 
 \subsection{Controllo degli accessi basato su capability}
 In un approccio al controllo degli accessi \textit{capability-based}, un utente possiede una lista di oggetti o risorse con una descrizione dei 
-permessi associati a ciascuno di essi, chiamata capability. Quando un client vuole accedere ad una determinato servizio, mostra ad esso la rispettiva
+permessi associati a ciascuno di essi, chiamata capability. Quando un client vuole accedere ad una determinato servizio mostra ad esso la rispettiva
  capability, e il servizio consentirà al client di eseguire le operazioni che rispettano i permessi elencati in questa.  
  Un esempio classico è l'associazione metaforica fra una capability e una chiave che apre una porta, dove la porta è la risorsa alla quale si vuole accede.  
 \\ Più volte in questa tesi si è fatto riferimento al fatto che il sistema, per come è stato impostato, implementa una tecnica 
 di controllo degli accessi RBAC, ossia basata sui ruoli.
 \\ Nonostante ciò, le politiche possono essere riscritte per ottenere un sistema di autorizzazione con un approccio capability-based.
-\\ Questa estensione sarebbe inoltre agevolata dal fatto che VOMS supporta un sistema del genere, come è osservabile dal campo "Capability" prensente nelle FQAN.
+\\ Questa estensione sarebbe inoltre agevolata dal fatto che i JWT forniti da WLCG supportano un sistema del genere. Il claim \texttt{scope} \cite{wlcg_jwt}, infatti,
+ è riservato al mantenimento delle capability dell'utente a cui il token è assciato. 
 
 \subsection{Accesso diretto a OpenPolicyAgent da parte del servizio applicativo}
 Un possibile miglioramento alla topologia del sistema consiste nella riconfigurazione del servizio applicativo 
@@ -47,7 +48,7 @@ con poche modifiche ad altri servizi.
 \\Vorrei infine dedicare queste ultime righe per esporre alcuni momenti importanti della mia esperienza personale nella concretizzazione del progetto. 
 \\ Ho avuto il piacere di avere un piccolo spazio “mio” in un centro di ricerca, e di ricevere consigli e supporto da persone eccellenti per know-how, che mi hanno fatto sentire “collega”.
 \\ Grazie a questa tesi, sono entrato in contatto con il mondo della computazione distribuita, che prima mi era totalmente estraneo. 
-È stato molto interessante osservare i meccanismi che coinvolgono l'esecuzione di batch job, e non dimenticherò mai 
+È stato molto interessante osservare i meccanismi che coinvolgono l'esecuzione di batch job: non dimenticherò mai 
 la quantità di rumore prodotta dai pod.   
 \\ Infine, questa tesi mi ha dato l'opportunità di mettere alla prova quanto avevo
 imparato durante questi anni di corso e trasformarli in competenze “sul campo”:
