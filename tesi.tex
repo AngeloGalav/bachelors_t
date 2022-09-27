@@ -15,7 +15,7 @@
 \renewcommand{\lstlistingname}{Codice}
 \definecolor{background}{HTML}{EEEEEE}
 \lstdefinelanguage{nginx}{
-    basicstyle=\footnotesize\ttfamily,
+	basicstyle=\footnotesize\ttfamily,
     numbers=left,
     numberstyle=\ttfamily,
     stepnumber=1,
@@ -23,8 +23,9 @@
     showstringspaces=false,
     breaklines=true,
     backgroundcolor=\color{background}
-}
-
+	}
+	
+\renewcommand*{\lstlistlistingname}{Elenco dei frammenti di codice}
 \graphicspath{ {./images/} }
 \oddsidemargin=30pt \evensidemargin=20pt
 \pagestyle{fancy}\addtolength{\headwidth}{20pt}\setlength{\headheight}{15pt}
@@ -44,7 +45,7 @@
 	\large
 	\em
 	Alla migliore madre del mondo,\linebreak
-	al migliore padre del mondo.\linebreak
+	al miglior padre del mondo.\linebreak
 	\newpage
 	\clearpage{\pagestyle{empty}\cleardoublepage}
 \end{titlepage}
@@ -73,6 +74,8 @@
 \tableofcontents
 \addtocontents{toc}{\protect\thispagestyle{empty}}
 \listoffigures
+\clearpage{\pagestyle{empty}\cleardoublepage}
+\lstlistoflistings
 \clearpage{\pagestyle{empty}\cleardoublepage}
 \listoftables
 \clearpage{\pagestyle{empty}\cleardoublepage}

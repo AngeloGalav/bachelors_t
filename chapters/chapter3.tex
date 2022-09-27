@@ -18,9 +18,9 @@ che saranno descritti nei paragrafi successivi.
 
 
 \subsection{OpenPolicyAgent}
-\textit{OpenPolicyAgent} (in OPA) è un software open source che permette di separare il processo di
+\textit{OpenPolicyAgent} (OPA) \cite{opa_bib} è un software open source che permette di separare il processo di
  decision-making 
-durante l'autorizzazione dall'applicazione rigorosa delle politiche.
+durante l'autorizzazione dall'applicazione rigorosa delle politiche \cite{opa_doc}.
 \\ Consideriamo un servizio che richiede di stabilire se un utente possiede dei determinati diritti d'accesso.
 OPA permette di gestire il problema decisionale analizzando le informazioni su di esso, ricevute attraverso un'interrogazione da parte del servizio. 
 Il carico computazionale della risoluzione del problema viene dunque spostato ad un altro componente, che potrà essere interrogato da più 
@@ -36,53 +36,53 @@ La Figura \ref*{OPAWork} mostra in modo schematico la gestione tipica di una ric
  e OPA valuta i dati a sua disposizione per formulare una decisione e restituirla. 
 Le informazioni della richiesta sono definiti in formato JSON, tuttavia sono strutturati in modo totalmente arbitrario. 
 \\ Le politiche (o policy) devono essere rappresentate attraverso il linguaggio dichiarativo 
-\textit{Rego}, la cui sintassi si ispira al linguaggio 
+\textit{Rego} \cite{rego_doc}, la cui sintassi si ispira al linguaggio 
 di interrogazione \textit{Datalog}. 
 Attraverso Rego, le regole si esprimono come delle asserzione sui dati mantenuti da OPA.
 Il codice dedicato alle politiche diventa così molto conciso rispetto ad un loro equivalente in 
 linguaggio imperativo. 
-\\ Un'altra funzionalità molto interessante di questo software sta nell'API della pol \textcolor{blue}{[QUI]}. In questo modo, una politica può essere modificata o inserita 
-in qualsiasi momento, tramite una richiesta all'API. Solamente chi ha accesso alla rete interna può usufruire di questa funzione. 
-\\ OpenPolicyAgent è il software che gestisce interamente il sistema di politiche. Oltra a formulare una decisione,
+\\ Un'altra funzionalità molto interessante di questo software sta nella REST API CRUD fornita da OpenPolicyAgent per la gestione delle politiche. In questo modo, una politica può essere modificata o inserita 
+in qualsiasi momento tramite una richiesta all'API. Nel sistema di autorizzazione implementato in questa tesi, il servizio API non è stato abilitato. 
+\\ OpenPolicyAgent è il software che gestisce interamente il sistema delle politiche di accesso. Oltra a formulare una decisione,
  infatti, coordina la ricezione delle informazioni e la trasmissione del risultato.  
 
 
 \subsection{NGINX}
-\textit{NGINX} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e dell'application server. 
+\textit{NGINX} \cite{nginx_bib} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e del servizio applicativo. 
 È conosciuto per la sua stabilità, semplicità di configurazione, estensibilità e consumo di risorse molto basso, infatti:
 \begin{itemize}
     \item 
     Contrariamente ai server tradizionali,  
     non usa moltecipli thread per gestire le richieste, ma si limita ad un'architettura asincrona a eventi. 
-    In questo modo, riesce a gestire un numero alto di connessioni senza che vi siano enormi ripercussioni sulle prestazioni. 
+    In questo modo, riesce a gestire un numero alto di connessioni senza che vi siano enormi ripercussioni sulle prestazioni \cite{nginx_doc}. 
     
     \item Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, e si
     limita alla creazione di un file con estensione ".config" con le clausole necessarie. 
-    \item NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli esterni attraverso il linguaggio \textit{NJS}, 
+    \item NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli esterni attraverso il linguaggio \textit{NJS} \cite{njs_doc}, 
     che consiste in una versione di JavaScript modificata. 
 \end{itemize}
 Per queste ragione Nginx è stato preferito ad altri sowtware similari.
 
 \subsection{Docker}
-\textit{Docker} è una piattaforma che sfrutta la virtualizzazione a livello del sistema operativo per incorporare software 
+\textit{Docker} \cite{docker_doc} è una piattaforma che sfrutta la virtualizzazione a livello del sistema operativo per incorporare software 
 in unità isolate chiamate \textit{container}, includendo anche le sue dipendenze. L'obiettivo di un container è quello di 
 facilitare la distribuzione di un applicativo software, permettendone l'esecuzione a prescindere dal sistema operativo 
 in uso dall'utente. 
-\\ Docker fornisce lo strumento \textit{Compose}, che permette di orchestrare dei servizi singoli a più container, 
+\\ Docker fornisce lo strumento \textit{Compose} \cite{docker_comp}, che permette di orchestrare dei servizi singoli a più container, 
 che comunicano fra loro su una rete privata. In questo modo è possibile creare facilmente una configurazione per lo schieramento dei sistemi in fase di produzione, 
 nonché un ambiente di sviluppo avente 
 un funzionamento e struttura analoghi al sistema finale. Le caratteristiche dei container e i collegamenti fra questi
  vengono definite tramite un file di configurazione in YAML. 
 
 
-\section{Implementazione delle componenti}
+\section{Implementazione dei componenti}
 L'intera struttura del sistema è definita attraverso il file di configurazione di Docker Compose. Ciò implica che ogni 
 elemento è stato virtualizzato attraverso un container, che svolge il suo compito come un processo separato. 
 \\ La topologia delle relazioni rispecchia quanto mostrato nella Figura \ref*{topologia}. 
 
 
-\subsection{Sistema di politiche}
-Il sistema di autorizzazione scelto in questo lavoro usa un approccio \textit{Role-Based Access Control} (in RBAC), in cui il 
+\subsection{Sistema delle politiche di accesso}
+Il sistema di autorizzazione scelto in questo lavoro usa un approccio \textit{Role-Based Access Control} (RBAC), in cui il 
 controllo degli accessi si basa sui diritti associati al ruolo dell'utente. 
 Altre tecniche di controllo degli accessi possono essere implementate cambiando le politiche. Nonostante ciò, 
 questo approccio risulta quello più consono alla dimostrazione delle capacità di OpenPolicyAgent.
@@ -132,7 +132,7 @@ nella situazione in cui le regole con tale testa siano "undefined".  \\
 I confronti con collezioni di dati sono esprimibili in maniera concisa, come avviene nelle righe 9 e 10 del Codice \ref*{opa_policy}.
 La variabile \texttt{all\_permission} contiene tutti i permessi del ruolo specificato nella query in input. 
 Se l'operazione svolta dall'utente risulta in questa collezione, allora il valore di \texttt{check\_permission} sarà "true". 
-\\ La risposta restituita alla componente che ha interrogato OPA consiste in un file in formato JSON contenente il valore 
+\\ La risposta restituita al componente che ha interrogato OPA consiste in un file in formato JSON contenente il valore 
 delle regole alle radici dell'albero gerarchio, oppure di tutte le regole che hanno portato le radici ad avere un valore undefined. 
 
 
@@ -176,12 +176,12 @@ se l'utente possiede effettivamente l'autorizzazione ad accedere a tale servizio
 come quella associata alle risorse protette, che richiedono un controllo dell'accesso. 
 \\ Attraverso il comando \texttt{auth\_request /authz},
 il flusso d'esecuzione passa immediatamente al codice associato all'endpoint \texttt{/authz}. 
-In questa fase, la richiesta HTTP viene condotta nel modulo NJS dedicato alla creazione della query e alla trasmissione di essa verso il sistema di politiche.
+In questa fase, la richiesta HTTP viene condotta nel modulo NJS dedicato alla creazione della query e alla trasmissione di essa verso il sistema delle politiche.
 La riga 18 del Codice \ref*{nginx_rp} invoca questa funzionalità. \\
 Il modulo NJS contiene il metodo \texttt{authorize\_operation}, che raccoglie le informazioni dagli header 
 e le trascrive in formato JSON.
 I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoint \texttt{/\_opa}, 
- associato alla comunicazione con il sistema di politiche.
+ associato alla comunicazione con il sistema delle politiche.
 \lstset{language=nginx}
 \begin{lstlisting}[caption={Frammento di codice del modulo NJS},captionpos=b,label=NJS]
     function authorize_operation(r) {
@@ -216,7 +216,7 @@ I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoin
         });
     }
 \end{lstlisting}
-In base alla risposta del sistema di politche, il reverse proxy inoltrerà il pacchetto originale all'application server con la keyword \texttt{proxy\_pass}, 
+In base alla risposta del sistema di politche, il reverse proxy inoltrerà il pacchetto originale al servizio applicativo con la keyword \texttt{proxy\_pass}, 
 oppure terminerà la gestione della richiesta.
 La parola chiave \texttt{internal} alle righe 10 e 23 del Codice \ref{nginx_rp}  garantisce che le locazioni 
 associate all'interrogazione di OpenPolicyAgent possano essere accedute esclusivamente da sottorichieste interne al reverse proxy. 
@@ -226,11 +226,11 @@ Dunque, è essenziale l'aggiunta di un livello di indirezione che converta gli h
 JSON comprensibili da OPA. 
 
 
-\subsection{Application server}
-Come descritto nella Sezione \ref*{serv_server}, con application server si intende un servizio qualsiasi che sfrutta 
-l'infrastruttura di autorizzazione. 
-Siccome questa fase del progetto si focalizza sullo sviluppo corretto delle componenti dedicate 
-al filtraggio delle richieste, l'application server è dato da una API relativamente elementare. \\
+\subsection{Servizio applicativo}
+Come descritto nella Sezione \ref*{serv_server}, con servizio applicativo si intende un servizio qualsiasi che usufruire in modo trasparente 
+dell'infrastruttura di autorizzazione. 
+Siccome questa fase del progetto si focalizza sullo sviluppo corretto dei componenti dedicati 
+al filtraggio delle richieste, il servizio applicativo è dato da una API relativamente elementare. \\
 L'API in questione ritorna una risposta generica con Status Code 200 se si accede correttamente all'endpoint \texttt{/operation}, 
 mentre una richiesta a \texttt{/operation/image\_request} permette lo scaricamento di 
 un'immagine. Siccome queste locazioni presentano il prefisso "operation", il loro accesso comporta l'uso 
@@ -238,7 +238,7 @@ del sistema di autorizzazione.
 
 La modalità web server di NGINX permette di implementare quanto appena descritto.
 \lstset{language=nginx}
-\begin{lstlisting}[caption={Frammento di codice dell'application server},captionpos=b,label=nginx_web]
+\begin{lstlisting}[caption={Frammento di codice del servizio applicativo.},captionpos=b,label=nginx_web]
     # invia 200 se si esegue l'operazione con successo
     location /operation {
         return 200;
@@ -260,7 +260,7 @@ Per proteggere il flusso dati da possibili intercettazioni è opportuno che la c
 \\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmettrica. Il suo funzionamento necessita 
 dei certificati X.509, e in questo modo garantiscono che la chiave pubblica di un host appartenga effettivamente ad esso. 
 \\ Nel caso del progetto di questa tesi, solamente la connesione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno
- all'infrastruttura possiede accesso diretto alle componenti.
+ all'infrastruttura possiede accesso diretto ai componenti.
 NGINX supporta le connessioni SSL/TLS attraverso alcune configurazioni esplicite.
 
 \begin{lstlisting}[caption={Configurazione di SSL},captionpos=b,label=nginx_ssl]
@@ -285,6 +285,6 @@ con una controparte ufficialmente verificata è un processo banale.
 \section{Testing}
 L'intera infrastruttura prende vita avviando i container di Docker Compose attraverso il comando \texttt{docker-compose up}.
 \\ Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenti nel proprio header le informazioni necessarie per formulare una query.
-\\ \textit{cURL} (o curl) è il software principale usanto in ambito di testing, siccome permette di inviare dati attraverso 
+\\ \textit{cURL} (o curl) \cite{curl} è il software principale usanto in ambito di testing, siccome permette di inviare dati attraverso 
 numerosi protocolli, tra cui anche HTTP. 
 \\ Questo metodologia è stata applicata in continuità durante lo sviluppo dell'intero progetto. 

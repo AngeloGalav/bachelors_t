@@ -1,44 +1,48 @@
-Durante la progettazione di un sistema di autorizzazione, è necessario considerare alcuni parametri fondamentali che ci permettono di valutarlo 
+Durante la progettazione di un sistema di autorizzazione, è necessario considerare alcuni parametri fondamentali
+ che ci permettono di valutarlo 
 nel contesto in cui ci si trova.
-\\ Quelli che hanno influito maggiormente sulle scelte progettuali sono stati:
+\\ Quelli che hanno contribuito maggiormente sulle scelte progettuali sono stati:
 \begin{itemize}
     \item la versatilità, cioé la capacità di interfacciarsi con sistemi di 
     funzionalità e struttura diversa.
     \item la manutenibilità, ovvero la facilità di apportare modifiche a sistema realizzato.
 \end{itemize}
-La prima è garantita attraverso la divisione in più componenti, così che modificare le regole d'accesso non richiede 
+La prima è garantita attraverso la divisione in più componenti, cosicché modificare le regole d'accesso non richieda
 un'alterazione del codice del complesso. 
 \\ La seconda è ottenuta tramite la separabilità totale dal servizio che si intende proteggere,
- facilitandone la compatibilità con altre tecnologie.   
+ facilitandone la compatibilità con altre tecnologie.  
+\\ Un'altra considerazione che ha influenzato l'architettura del sistema è stata la scelta del software per la gestione 
+della fase decisionale dell'autorizzazione, che richiede una gestione delle due fasi dell'autorizzazione tramite l'uso di componenti seperati. 
 
 \section{Componenti principali}
 
 L'architettura dell'infrastruttura presenta uno scheletro formato da tre componenti di principali: 
 \begin{itemize}
     \item il \textit{reverse proxy}
-    \item il \textit{sistema di politiche}
-    \item l' \textit{application server}
+    \item il \textit{sistema delle politiche di accesso}
+    \item il \textit{servizio applicativo}
 \end{itemize}
 Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tuttavia solo le prime due influenzano il processo di autorizzazione. 
 
 \subsection{Reverse proxy}
-Il reverse proxy rappresenta l'entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
-mediare la comunicazione tra client e application server: ogni richiesta che viene fatta da un utente è obbligata ad attraversare 
+Il reverse proxy rappresenta l'unico entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
+mediare la comunicazione tra client e il servizio applicativo: ogni richiesta che viene fatta da un utente è obbligata ad attraversare 
 il reverse proxy prima di giungere al server. 
-L'attraversamento del proxy è trasparente: al client apparirà di comunicare direttamente con il server, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
+\\ L'attraversamento del proxy è trasparente: al client apparirà di comunicare direttamente con il servizio, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
 \\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene effettivamente espresso il concetto di autorizzazione. 
-Infatti, il reverse proxy inoltra o ignora le richieste all'application server, basandosi sull'output del sistema di politiche.  
+Infatti, il reverse proxy inoltra o ignora le richieste al servizio applicativo, basandosi sull'output del sistema delle politiche di accesso.  
  
-\subsection{Sistema di politiche}
-Il sistema di politiche è la parte che determina come la richiesta dovrà essere gestita. 
+\subsection{Sistema delle politiche di accesso}
+Il sistema delle politiche di accesso è la parte che determina come la richiesta dovrà essere gestita. 
 \\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, 
 che devono essere propriamente formattate per essere comprese correttamente. 
-Dopodiché, applica le regole d'accesso e confronta i dati con i permessi, ai quali ha accesso diretto.
-Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito.  
+\\ Dopodiché, applica le regole d'accesso e confronta i dati ricevuti con un database dei permessi, al quale ha accesso diretto.
+Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito o meno.  
 
-\subsection{Application server} \label{serv_server}
-Con application server si intende il servizio che sfrutta il sistema di autorizzazione. Come tale,
- il suo ciclo d'esecuzione consiste nel gestire 
+\subsection{Servizio applicativo} \label{serv_server}
+Con servizio applicativo si intende il servizio che usufruisce del sistema di autorizzazione. 
+Nonostante ciò, l'intero sistema gli è totalmente trasparente e non necessita di modifiche per interfacciarsi con esso.
+\\Il suo ciclo d'esecuzione consiste nel gestire 
 le richieste provenienti dagli utenti tramite
  il reverse proxy e formulare una risposta.
 Questa viene inoltrata al mittente iniziale, senza che sia filtrata o analizzata, ma attraversando comunque il proxy.
