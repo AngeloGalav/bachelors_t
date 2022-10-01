@@ -5,8 +5,8 @@
 \\I due processi sono interamente interconnessi: l'autorizzazione fa uso dei dati provenienti 
 dall'autenticazione e in base a questi stabilisce i 
 permessi che un'entità possiede.
-\\ In informatica, l'autorizzazione si basa sulle \textit{politiche di accesso} (o policy), che vengono utilizzate per determinare se 
-una richiesta d'accesso a una risorsa da parte di un utente autenticato deve essere approvata o rifiutata.
+\\In informatica, l'autorizzazione si basa sulle \textit{politiche di accesso} (o policy), che vengono utilizzate per determinare se 
+una richiesta di accesso a una risorsa da parte di un utente autenticato deve essere approvata o rifiutata.
 \\ Il processo del controllo degli accessi è composto da due stadi principali: una fase decisionale, in cui si valutano i permessi dell'utente 
  formulando una decisione in base alle politiche di accesso del sistema,
 e una fase esecutiva, in cui si applica effettivamente quanto è stato deciso. 
@@ -23,12 +23,12 @@ l'acceleratore di particelle situato nel CERN di Ginevra.
 \begin{figure}[h]
     \includegraphics[width=10cm]{map.png}
     \centering
-    \caption{Locazione geografica dei centri di calcolo del Worldwide LHC Computing Grid}
+    \caption[Locazione geografica dei centri di calcolo del WLCG]{Locazione geografica dei centri di calcolo del Worldwide LHC Computing Grid.}
     \label{mappa}
 \end{figure}
 
 Ad oggi, il WLCG incorpora circa 170 centri di calcolo sparsi in 42 paesi. 
-Uno di questi risiede nel centro CNAF dell'Istituto Nazionale di Fisica Nucleare (INFN) \cite{infn_cnaf} a Bologna,
+Uno di questi risiede nel centro \textit{CNAF} dell'Istituto Nazionale di Fisica Nucleare (INFN) \cite{infn_cnaf} a Bologna,
  e rappresenta uno dei principali centri di calcolo di questa associazione. Come tale, il CNAF contribuisce
   alla gestione e allo sviluppo del middleware associato all'infrastruttura grid del WLCG. 
 
@@ -44,7 +44,7 @@ il sistema deve essere compatibile
  con le tecniche di autenticazione adottate dai suoi servizi.
 \\ Attualmente, il WLCG si trova in una fase di transizione dall'autenticazione basata su certificati proxy in favore all'uso dei token OAuth 2.0.
  Dunque, è necessario che il sistema sia compatibile con entrambi i metodi. 
-\\Un altro vincolo riguarda l'implementazione: i componenti del sistema devono basarsi su strumenti software d'industria prontamente disponibili,
+\\Un altro vincolo riguarda l'implementazione: i componenti del sistema devono basarsi su strumenti software di industria prontamente disponibili,
  in modo da assicurarne 
 la stabilità e l'affidabilità.  
 

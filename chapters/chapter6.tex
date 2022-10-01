@@ -1,31 +1,31 @@
 Nei capitoli precedenti è stato illustrato l'intero processo di realizzazione del sistema, partendo dalla
-progettazione architetturale e evolvendolo gradualmente tramite l'aggiunta di nuove funzionalità, che includono il supporto alla comunicazione crittografata 
+progettazione architetturale ed evolvendolo gradualmente tramite l'aggiunta di nuove funzionalità, che includono il supporto alla comunicazione crittografata 
 e a differenti tecnologie di autenticazione. 
 \\ Il Capitolo 5 ha mostrato la facilità 
-con cui questo sistema riesce ad integrarsi con un servizio già esistente, senza richiedere una 
+con cui questo sistema riesce a integrarsi con un servizio già esistente, senza richiedere una 
 riprogrammazione totale dei componenti, ma modificando il modulo dedicato alla formattazione dei dati. 
 \\ Nel presente capitolo verranno esposte alcune proposte di sviluppi futuri emerse durante l'implementazione, assieme a una riflessione
  sui risultati a progetto realizzato. 
 
 \section{Sviluppi futuri}
 Il progetto esposto in questa tesi fornisce una buona base per la creazione di un sistema di autorizzazione 
-in cui il carico del processo di decision-making è affidato ad un componente esterno.  
+in cui il carico del processo di decision-making è affidato a un componente esterno.  
 \\ Nonostante ciò, sono molte le possibilità per cui quanto è stato creato può essere esteso e migliorato. 
 
 \subsection{Modifica delle policy dall'esterno}
 OpenPolicyAgent è uno strumento molto affascinante e con questo progetto abbiamo 
 appena scalfito la superficie delle possibilità che offre. \\ Uno degli aspetti particolarmente interessanti 
-sarebbe lo sviluppo di un'estensione del sistema per consentire la modifica delle policy connettendosi all'infrastruttura. 
-Come è stato illustrato nel Capitolo 3, infatti, OPA fornisce un'API che espone degli 
+potrebbe essere lo sviluppo di un'estensione del sistema per consentire la modifica delle policy connettendosi all'infrastruttura. 
+Come è stato illustrato nel Capitolo 3, infatti, OPA fornisce una API che espone degli 
 endpoint CRUD, in modo da permettere la modifica, l'inserimento e l'eliminazione delle regole "on the fly".
 \\Un'estensione del genere abiliterebbe un qualsiasi utente privilegiato a modificare le regole con estrema
  convenienza.   
 \\ Seguendo questo principio, una possibile implementazione potrebbe impiegare l'uso di policy di OPA per applicare un controllo degli accessi 
-riguardo la modifica delle policy stesse, il che rappresenterebbe un caso di studio decisamente curioso. 
+riguardo la modifica delle policy stesse, il che rappresenterebbe un caso di studio decisamente interessante. 
 
 \subsection{Controllo degli accessi basato su capability}
 In un approccio al controllo degli accessi \textit{capability-based}, un utente possiede una lista di oggetti o risorse con una descrizione dei 
-permessi associati a ciascuno di essi, chiamata capability. Quando un client vuole accedere ad una determinato servizio mostra ad esso la rispettiva
+permessi associati a ciascuno di essi, chiamata capability. Quando un client vuole accedere a una determinato servizio mostra a esso la rispettiva
  capability, e il servizio consentirà al client di eseguire le operazioni che rispettano i permessi elencati in questa.  
  Un esempio classico è l'associazione metaforica fra una capability e una chiave che apre una porta, dove la porta è la risorsa alla quale si vuole accede.  
 \\ Più volte in questa tesi si è fatto riferimento al fatto che il sistema, per come è stato impostato, implementa una tecnica 
@@ -38,11 +38,11 @@ di controllo degli accessi RBAC, ossia basata sui ruoli.
 Un possibile miglioramento alla topologia del sistema consiste nella riconfigurazione del servizio applicativo 
 per permettere di accedere al sistema delle politiche quando è necessario un controllo dell'accesso da parte dell'applicazione. 
 \\ In questo modo, l'eventuale processo di autorizzazione interno al servizio sarebbe anch'esso gestito da OpenPolicyAgent, 
-che incapsulerebbe tutte le politiche e le regole d'accesso dell'infrastruttura.
+che incapsulerebbe tutte le politiche e le regole di accesso dell'infrastruttura.
 
 \section{Osservazioni finali}
 L'obiettivo fondamentale di un proof-of-concept consiste nel dimostrare la realizzabilità 
-di un sistema, mi ritengo soddisfatto del risultato finale ottenuto. L'infrastruttura ricalca l'obiettivo 
+di un sistema, e da questo punto di vista mi ritengo soddisfatto del risultato finale ottenuto. L'infrastruttura ricalca l'obiettivo 
 posto da questa tesi, realizzando un controllo efficace degli accessi e interfacciandosi 
 con poche modifiche ad altri servizi.  
 \\Vorrei infine dedicare queste ultime righe per esporre alcuni momenti importanti della mia esperienza personale nella concretizzazione del progetto. 

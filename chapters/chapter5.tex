@@ -1,4 +1,4 @@
-Durante le fasi di sviluppo iniziali, il servizio collegato al sistema di autenticazione era dato da un'API
+Durante le fasi di sviluppo iniziali, il servizio collegato al sistema di autenticazione era dato da una API
 elementare e senza funzionalità significative.
 \\ Tuttavia, per quanto un'impostazione simile possa essere utile ai fini dell'implementazione del sistema, non 
 permette di valutare correttamente le caratteristiche di un proof-of-concept.
@@ -16,10 +16,10 @@ Per accedere o modificare i dati di un file,
 un braccio robotico individua il relativo nastro e lo inserisce all'interno di un lettore.
 \\ In relazione a questo, \textit{StoRM-Tape} è una componente middleware sviluppata
 attivamente dalla sezione di Software Development dell'INFN CNAF, che nella data di scrittura di questa tesi è in fase di proof-of-concept.
-Consiste in un'implementazione della specifica {WLCG Tape REST API}, che offre un'interfaccia comune per permettere 
+Consiste in un'implementazione della specifica {WLCG Tape REST API} \cite{wlcg_tape_doc}, che offre un'interfaccia comune per permettere 
 ai client di gestire la residenza dei dati mantenuti negli storage dati basati sui nastri dei grid. 
 \\ Le funzionalità principali fornite dall'API sono illustrate nella Tabella \ref*{tab:table-name}. Ai comandi \texttt{STAGE} e \texttt{ARCHIVEINFO} è associato un endpoint,
-che si comporta in modo diverso in base al metodo HTTP della richiesta inviata ad esso. Ad esempio, la funzionalità \texttt{RELEASE}
+che si comporta in modo diverso in base al metodo HTTP della richiesta inviata a esso. Ad esempio, la funzionalità \texttt{RELEASE}
 si ottiene inviando una richiesta con metodo \texttt{DELETE} all'endpoint \texttt{/stage}.
 
 \begin{table}
@@ -28,20 +28,20 @@ si ottiene inviando una richiesta con metodo \texttt{DELETE} all'endpoint \textt
   \hline
   \textbf{Funzionalità} & \textbf{Descrizione} \\ 
   \hline
-  \texttt{STAGE} & Richiede che i file mantenuti su un determinato nastro siano reso disponibili sul disco rigido. \\ 
+  \texttt{STAGE} & Richiede che i file mantenuti su un determinato nastro siano resi disponibili sul disco rigido. \\ 
   \hline
   \texttt{RELEASE} & Indica che i file precedentemente resi disponibili non sono più richiesti. \\ 
   \hline
   \texttt{ARCHIVEINFO} & Richiede informazioni riguardo il progresso della scrittura dei file su nastro. \\ 
   \hline
 \end{tabular}
-\caption{\label{tab:table-name} Insieme delle operazioni fornite dalla specifica WLCG Tape REST API}
+\caption{\label{tab:table-name} Insieme delle operazioni fornite dalla specifica WLCG Tape REST API.}
 \end{center}
 \end{table}
 
 \section{Interfacciare il sistema con il servizio}
 L'interfacciamento del sistema con il servizio richiede delle alterazioni alla configurazione del reverse proxy. In particolare, 
-il modulo NJS adibito all'invio delle informazioni ad OpenPolicyAgent deve analizzare l'endpoint e il metodo della richiesta per 
+il modulo NJS adibito all'invio delle informazioni a OpenPolicyAgent deve analizzare l'endpoint e il metodo della richiesta per 
 determinare il tipo di operazione che l'utente sta svolgendo.
 \\ La prima modifica consiste nel cambiamento della location "protetta", che porta a un controllo dell'accesso, 
 facendo sì che rifletta la locazione associata all'API di StoRM-Tape.  

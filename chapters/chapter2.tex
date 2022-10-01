@@ -7,7 +7,7 @@ nel contesto in cui ci si trova.
     funzionalità e struttura diversa.
     \item la manutenibilità, ovvero la facilità di apportare modifiche a sistema realizzato.
 \end{itemize}
-La prima è garantita attraverso la divisione in più componenti, cosicché modificare le regole d'accesso non richieda
+La prima è garantita attraverso la divisione in più componenti, cosicché modificare le regole di accesso non richieda
 un'alterazione del codice del complesso. 
 \\ La seconda è ottenuta tramite la separabilità totale dal servizio che si intende proteggere,
  facilitandone la compatibilità con altre tecnologie.  
@@ -28,8 +28,8 @@ Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tutta
 Il sistema delle politiche di accesso è la parte che determina come la richiesta dovrà essere gestita. 
 \\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, 
 che devono essere propriamente formattate per essere comprese correttamente. 
-\\ Dopodiché, applica le regole d'accesso e confronta i dati ricevuti con un database dei permessi, al quale ha accesso diretto.
-\\Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito o meno.  
+\\ Dopodiché, applica le regole di accesso e confronta i dati ricevuti con un database dei permessi, al quale ha accesso diretto.
+\\ Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito o meno.  
 
 \subsection{Reverse proxy}
 Il reverse proxy rappresenta l'unico entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
@@ -43,7 +43,7 @@ Infatti, il reverse proxy inoltra o ignora le richieste al servizio applicativo,
 \subsection{Servizio applicativo} \label{serv_server}
 Con servizio applicativo si intende il servizio che usufruisce del sistema di autorizzazione. 
 Nonostante ciò, l'intero sistema gli è totalmente trasparente e non necessita di modifiche per interfacciarsi con esso.
-\\Il suo ciclo d'esecuzione consiste nel gestire 
+\\Il suo ciclo di esecuzione consiste nel gestire 
 le richieste provenienti dagli utenti tramite
  il reverse proxy e formulare una risposta.
 Questa viene inoltrata al mittente iniziale, senza che sia filtrata o analizzata, ma attraversando comunque il proxy.
@@ -51,7 +51,8 @@ Questa viene inoltrata al mittente iniziale, senza che sia filtrata o analizzata
 \begin{figure}[h]
     \includegraphics[width=13cm]{topologia.png}
     \centering
-    \caption{Rappresentazione concettuale del sistema}
+    \caption[Rappresentazione concettuale del sistema di autorizzazione.]{Rappresentazione concettuale dell'infrastruttura. La richiesta di un utente viene prima processata dal reverse proxy, che
+     la inoltrerà o meno al servizio applicativo basandosi sulla decisione formulata dal sistema delle politiche di accesso.}
     \label{topologia}
 \end{figure}
 
