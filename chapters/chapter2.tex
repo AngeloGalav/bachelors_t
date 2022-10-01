@@ -3,7 +3,7 @@ Durante la progettazione di un sistema di autorizzazione, è necessario consider
 nel contesto in cui ci si trova.
 \\ Quelli che hanno contribuito maggiormente sulle scelte progettuali sono stati:
 \begin{itemize}
-    \item la versatilità, cioé la capacità di interfacciarsi con sistemi di 
+    \item la versatilità, cioè la capacità di interfacciarsi con sistemi di 
     funzionalità e struttura diversa.
     \item la manutenibilità, ovvero la facilità di apportare modifiche a sistema realizzato.
 \end{itemize}
@@ -12,7 +12,7 @@ un'alterazione del codice del complesso.
 \\ La seconda è ottenuta tramite la separabilità totale dal servizio che si intende proteggere,
  facilitandone la compatibilità con altre tecnologie.  
 \\ Un'altra considerazione che ha influenzato l'architettura del sistema è stata la scelta del software per la gestione 
-della fase decisionale dell'autorizzazione, che richiede una gestione delle due fasi dell'autorizzazione tramite l'uso di componenti seperati. 
+della fase decisionale dell'autorizzazione, che richiede una gestione delle due fasi dell'autorizzazione tramite l'uso di componenti separati. 
 
 \section{Componenti principali}
 
@@ -29,7 +29,7 @@ Il sistema delle politiche di accesso è la parte che determina come la richiest
 \\ Per adempiere al suo ruolo, sfrutta le informazioni di identità dell'utente contenute nella richiesta, 
 che devono essere propriamente formattate per essere comprese correttamente. 
 \\ Dopodiché, applica le regole d'accesso e confronta i dati ricevuti con un database dei permessi, al quale ha accesso diretto.
-Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito o meno.  
+\\Infine, restituisce in output una decisione, che stabilisce se l'accesso è consentito o meno.  
 
 \subsection{Reverse proxy}
 Il reverse proxy rappresenta l'unico entry-point dell'intero sistema di autorizzazione. Il compito di questo componente è di
@@ -56,6 +56,6 @@ Questa viene inoltrata al mittente iniziale, senza che sia filtrata o analizzata
 \end{figure}
 
 \section{Topologia finale}
-In base a quanto è stato esposto nei paragrafi precendenti, si ottiene una struttura topologica simile a quanto mostrato nella Figura \ref{topologia}. 
-I numeri su ogni freccia dei flussi dati indicano la sequenza temporale delle trasmissioni di dati tra gli elementi. 
+In base a quanto è stato esposto nei paragrafi precedenti, si ottiene una struttura topologica simile a quanto mostrato nella Figura \ref{topologia}. 
+I numeri su ogni freccia dei flussi dati indicano la sequenza temporale delle trasmissioni delle informazioni tra gli elementi. 
 \\Ciascun componente è interpretabile come un processo separato in esecuzione sullo stesso server o su server diversi. 

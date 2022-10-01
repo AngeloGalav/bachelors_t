@@ -1,7 +1,7 @@
 La fase di implementazione delle basi del sistema rimane sicuramente la parte più corposa dello sviluppo del progetto.
 \\ In questo capitolo verranno discussi in dettaglio gli strumenti e le tecniche
 che hanno permesso la realizzazione dell'infrastruttura. Particolare attenzione sarà posta nella descrizione 
-nella descrizione della parte operativa, attraverso l'illustrazione di frammenti di codice particolarmente significativi. 
+della parte operativa, attraverso l'illustrazione di frammenti di codice significativi nel contesto dell'implementazione. 
 
 \section{Software stack}
 Con \textit{software stack} si intende l'insieme di sottosistemi software che permettono di realizzare una piattaforma completa.
@@ -43,7 +43,7 @@ Il codice dedicato alle politiche diventa così molto conciso rispetto ad un lor
 linguaggio imperativo. 
 \\ Un'altra funzionalità molto interessante di questo software sta nella REST API CRUD fornita da OpenPolicyAgent per la gestione delle politiche. In questo modo, una politica può essere modificata o inserita 
 in qualsiasi momento tramite una richiesta all'API. Nel sistema di autorizzazione implementato in questa tesi, il servizio API non è stato abilitato. 
-\\ OpenPolicyAgent è il software che gestisce interamente il sistema delle politiche di accesso. Oltra a formulare una decisione,
+\\ OpenPolicyAgent è il software che gestisce interamente il sistema delle politiche di accesso. Oltre a formulare una decisione,
  infatti, coordina la ricezione delle informazioni e la trasmissione del risultato.  
 
 
@@ -53,7 +53,7 @@ in qualsiasi momento tramite una richiesta all'API. Nel sistema di autorizzazion
 \begin{itemize}
     \item 
     Contrariamente ai server tradizionali,  
-    non usa moltecipli thread per gestire le richieste, ma si limita ad un'architettura asincrona a eventi. 
+    non usa molteplici thread per gestire le richieste, ma si limita ad un'architettura asincrona a eventi. 
     In questo modo, riesce a gestire un numero alto di connessioni senza che vi siano enormi ripercussioni sulle prestazioni \cite{nginx_doc}. 
     
     \item Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, limitandosi
@@ -61,7 +61,7 @@ in qualsiasi momento tramite una richiesta all'API. Nel sistema di autorizzazion
     \item NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli esterni attraverso il linguaggio \textit{NJS} \cite{njs_doc}, 
     che consiste in una versione di JavaScript modificata. 
 \end{itemize}
-Per queste ragione Nginx è stato preferito ad altri sowtware similari.
+Per queste ragione NGINX è stato preferito ad altri software similari.
 
 \subsection{Docker}
 \textit{Docker} \cite{docker_doc} è una piattaforma che sfrutta la virtualizzazione a livello del sistema operativo per incorporare software 
@@ -133,7 +133,7 @@ I confronti con collezioni di dati sono esprimibili in maniera concisa, come avv
 La variabile \texttt{all\_permission} contiene tutti i permessi del ruolo specificato nella query in input. 
 Se l'operazione svolta dall'utente risulta in questa collezione, allora il valore di \texttt{check\_permission} sarà "true". 
 \\ La risposta restituita al componente che ha interrogato OPA consiste in un file in formato JSON contenente il valore 
-delle regole alle radici dell'albero gerarchio, oppure di tutte le regole che hanno portato le radici ad avere un valore undefined. 
+delle regole alle radici dell'albero gerarchico, oppure di tutte le regole che hanno portato le radici ad avere un valore undefined. 
 
 
 \subsection{Reverse proxy}
@@ -249,17 +249,17 @@ La modalità web server di NGINX permette di implementare quanto appena descritt
         try_files $uri /test.jpg;
     }
 \end{lstlisting}
-La cluasola \texttt{return} invia al client uno specifico HTTP Status Code,  
+La clausola \texttt{return} invia al client uno specifico HTTP Status Code,  
 Questa scelta ha facilitato lo sviluppo, permettendo di definire in poche righe di codice una API funzionante e adatta ai requisiti,  
 come si può vedere nel Codice \ref*{nginx_web}.
 
 \section{Cifratura SSL/TLS}
-Spesso un sistema di autorizzaione richiede delle informazioni sensibili riguardo un utente per attuare il controllo 
+Spesso un sistema di autorizzazione richiede delle informazioni sensibili riguardo un utente per attuare il controllo 
 degli accessi. 
 Per proteggere il flusso dati da possibili intercettazioni è opportuno che la comunicazione fra il servizio e l'utente venga cifrata. 
-\\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmettrica. Il suo funzionamento necessita 
+\\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmetrica. Il suo funzionamento necessita 
 dei certificati X.509, che garantiscono che la chiave pubblica di un host appartenga effettivamente ad esso. 
-\\ Nel caso del progetto di questa tesi, solamente la connesione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno
+\\ Nel caso del progetto di questa tesi, solamente la connessione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno
  all'infrastruttura possiede accesso diretto ai componenti.
 NGINX supporta le connessioni SSL/TLS attraverso alcune configurazioni esplicite.
 
@@ -285,6 +285,6 @@ con una controparte ufficialmente verificata è un processo banale.
 \section{Testing}
 L'intera infrastruttura prende vita avviando i container di Docker Compose attraverso il comando \texttt{docker-compose up}.
 \\ Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenti nel proprio header le informazioni necessarie per formulare una query.
-\\ \textit{cURL} (o curl) \cite{curl} è il software principale usanto in ambito di testing, siccome permette di inviare dati attraverso 
+\\ \textit{cURL} (o curl) \cite{curl} è il software principale usato in ambito di testing, siccome permette di inviare dati attraverso 
 numerosi protocolli, tra cui anche HTTP. 
 \\ Questo metodologia è stata applicata in continuità durante lo sviluppo dell'intero progetto. 

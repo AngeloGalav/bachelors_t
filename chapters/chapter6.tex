@@ -20,7 +20,7 @@ Come è stato illustrato nel Capitolo 3, infatti, OPA fornisce un'API che espone
 endpoint CRUD, in modo da permettere la modifica, l'inserimento e l'eliminazione delle regole "on the fly".
 \\Un'estensione del genere abiliterebbe un qualsiasi utente privilegiato a modificare le regole con estrema
  convenienza.   
-\\ Seguendo questo pricipio, una possibile implementazione potrebbe impiegare l'uso di policy di OPA per applicare un controllo degli accessi 
+\\ Seguendo questo principio, una possibile implementazione potrebbe impiegare l'uso di policy di OPA per applicare un controllo degli accessi 
 riguardo la modifica delle policy stesse, il che rappresenterebbe un caso di studio decisamente curioso. 
 
 \subsection{Controllo degli accessi basato su capability}
@@ -32,7 +32,7 @@ permessi associati a ciascuno di essi, chiamata capability. Quando un client vuo
 di controllo degli accessi RBAC, ossia basata sui ruoli.
 \\ Nonostante ciò, le politiche possono essere riscritte per ottenere un sistema di autorizzazione con un approccio capability-based.
 \\ Questa estensione sarebbe inoltre agevolata dal fatto che i JWT forniti da WLCG supportano un sistema del genere. Il claim \texttt{scope} \cite{wlcg_jwt}, infatti,
- è riservato al mantenimento delle capability dell'utente a cui il token è assciato. 
+ è riservato al mantenimento delle capability dell'utente a cui il token è associato. 
 
 \subsection{Accesso diretto a OpenPolicyAgent da parte del servizio applicativo}
 Un possibile miglioramento alla topologia del sistema consiste nella riconfigurazione del servizio applicativo 
