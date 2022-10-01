@@ -38,6 +38,8 @@ il reverse proxy prima di giungere al server.
 \\ L'attraversamento del proxy è trasparente: al client apparirà di comunicare direttamente con il servizio, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
 \\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene effettivamente espresso il concetto di autorizzazione. 
 Infatti, il reverse proxy inoltra o ignora le richieste al servizio applicativo, basandosi sull'output del sistema delle politiche di accesso.  
+\\ Il termine "reverse" permette di distinguerlo dai normali proxy d'inoltro, che interfacciano un client con una rete senza necessariamente esaminare il pacchetto in uscita 
+o in entrata. Un reverse proxy, invece, viene posto nella comunicazione fra un server e i client che cercano di accedervi, applicando un controllo degli accessi. 
  
 
 \subsection{Servizio applicativo} \label{serv_server}
