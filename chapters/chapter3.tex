@@ -16,21 +16,22 @@ Lo stack dell'infrastruttura è composto dai seguenti software, che saranno desc
 Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolgere il proprio compito. 
 
 
-\subsection{OpenPolicyAgent}
+\subsection{OpenPolicyAgent} \label{opa_intro}
 \textit{OpenPolicyAgent} (OPA) \cite{opa_bib} è un software open source che permette di separare, durante l'autorizzazione, il processo di
  decision-making  dall'applicazione rigorosa delle politiche.
 \\ Ad esempio, consideriamo un servizio che richiede di stabilire se un utente possiede dei determinati diritti di accesso.
 OPA permette di gestire il problema decisionale del controllo dell'accesso analizzando le informazioni su di esso, ricevute attraverso un'interrogazione da parte del servizio. 
 In questo modo, l'applicazione delle politiche di accesso viene delegata a un componente singolo, che potrà essere interrogato da più 
-agenti.\\ Il principale vantaggio di una struttura di questo tipo consiste nell'eliminazione di eventuali ambiguità
- causate dall'implementazione del controllo degli accessi in ciascun elemento del sistema. 
+agenti.
 \begin{figure}[h]
     \includegraphics[height=6cm]{opa-service.jpg}
     \centering
     \caption[Meccanismo di operazione di OPA]{Meccanismo di operazione di OpenPolicyAgent. Si analizza la query proveniente da un agente, e in base alle politiche e ai dati a sua disposizione, formula una decisione da inviare al mittente. }
     \label{OPAWork}
 \end{figure} 
-La Figura \ref*{OPAWork} mostra in modo schematico la gestione tipica di una richiesta: un servizio invia un'interrogazione
+\\ Il principale vantaggio di una struttura di questo tipo consiste nell'eliminazione di eventuali ambiguità
+ causate dall'implementazione del controllo degli accessi in ciascun elemento del sistema. 
+\\La Figura \ref*{OPAWork} mostra in modo schematico la gestione tipica di una richiesta: un servizio invia un'interrogazione
  a OPA che in base ai dati a sua disposizione formula una decisione e la restituisce al servizio stesso. 
 Le informazioni della richiesta sono definite in formato JSON, e sono strutturate in modo totalmente arbitrario. 
 \\ Le politiche (o policy) devono essere rappresentate attraverso il linguaggio dichiarativo 
@@ -40,7 +41,7 @@ Attraverso Rego, le regole sono espresse come delle asserzione sui dati mantenut
 Il codice dedicato alle politiche diventa così molto conciso rispetto a un equivalente in 
 linguaggio imperativo. 
 \\ Un'altra funzionalità molto interessante di questo software risiede nella REST API CRUD fornita da OpenPolicyAgent per la gestione delle politiche \cite{opa_api}. Grazie a questa, una politica può essere modificata o inserita 
-in qualsiasi momento tramite una richiesta all'API. Nel sistema di autorizzazione implementato in questa tesi, il servizio API non è stato abilitato. 
+in qualsiasi momento tramite una richiesta all'API. 
 \\ OpenPolicyAgent è il software che gestisce interamente il sistema delle politiche di accesso. Infatti, oltre a formulare una decisione, 
 coordina la ricezione delle informazioni e la trasmissione del risultato.  
 
