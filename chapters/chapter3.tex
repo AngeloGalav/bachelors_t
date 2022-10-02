@@ -20,13 +20,13 @@ Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolger
 \textit{OpenPolicyAgent} (OPA) \cite{opa_bib} è un software open source che permette di separare, durante l'autorizzazione, il processo di
  decision-making  dall'applicazione rigorosa delle politiche.
 \\ Ad esempio, consideriamo un servizio che richiede di stabilire se un utente possiede dei determinati diritti di accesso.
-OPA permette di gestire il problema decisionale del controllo dell'accesso analizzando le informazioni su di esso, ricevute attraverso un'interrogazione da parte del servizio. 
+OPA permette di gestire il problema decisionale del controllo degli accessi analizzando le informazioni ricevute attraverso un'interrogazione da parte del servizio. 
 In questo modo, l'applicazione delle politiche di accesso viene delegata a un componente singolo, che potrà essere interrogato da più 
-agenti.
+entità.
 \begin{figure}[h]
     \includegraphics[height=6cm]{opa-service.jpg}
     \centering
-    \caption[Meccanismo di operazione di OPA]{Meccanismo di operazione di OpenPolicyAgent. Si analizza la query proveniente da un agente, e in base alle politiche e ai dati a sua disposizione, formula una decisione da inviare al mittente. }
+    \caption[Meccanismo di operazione di OPA]{Meccanismo di operazione di OpenPolicyAgent. Si analizza la query proveniente da un servizio, e in base alle politiche e ai dati a sua disposizione, formula una decisione da inviare al mittente. }
     \label{OPAWork}
 \end{figure} 
 \\ Il principale vantaggio di una struttura di questo tipo consiste nell'eliminazione di eventuali ambiguità
@@ -37,7 +37,7 @@ Le informazioni della richiesta sono definite in formato JSON, e sono strutturat
 \\ Le politiche (o policy) devono essere rappresentate attraverso il linguaggio dichiarativo 
 \textit{Rego} \cite{rego_doc}, la cui sintassi si ispira al linguaggio 
 di interrogazione \textit{Datalog}. 
-Attraverso Rego, le regole sono espresse come delle asserzione sui dati mantenuti da OPA.
+Attraverso Rego, le regole sono espresse come delle asserzioni sui dati mantenuti da OPA.
 Il codice dedicato alle politiche diventa così molto conciso rispetto a un equivalente in 
 linguaggio imperativo. 
 \\ Un'altra funzionalità molto interessante di questo software risiede nella REST API CRUD fornita da OpenPolicyAgent per la gestione delle politiche \cite{opa_api}. Grazie a questa, una politica può essere modificata o inserita 
@@ -56,7 +56,7 @@ coordina la ricezione delle informazioni e la trasmissione del risultato.
     In questo modo, riesce a gestire un numero alto di connessioni senza inficiare le prestazioni \cite{nginx_doc}. 
     
     \item Configurare il software per ottenere il comportamento desiderato diventa un processo relativamente semplice e intuitivo, limitandosi
-    alla creazione di un file con estensione ".config" con le clausole necessarie. 
+    alla creazione di un file con estensione \texttt{.conf} con le clausole necessarie. 
     \item NGINX permette di estendere le proprie funzionalità tramite la creazione di moduli attraverso il linguaggio \textit{NJS} \cite{njs_doc}, 
     che consiste in una versione ridotta di JavaScript. 
 \end{itemize}
@@ -65,12 +65,11 @@ Per queste ragione NGINX è stato preferito ad altri software similari.
 \subsection{Docker}
 \textit{Docker} \cite{docker_doc} è una piattaforma che sfrutta la virtualizzazione a livello del sistema operativo per incorporare software 
 in unità isolate chiamate \textit{container}, includendo anche le sue dipendenze. L'obiettivo di un container è quello di 
-facilitare la distribuzione di un applicativo software, permettendone l'esecuzione a prescindere dal sistema operativo 
+facilitare la distribuzione di un applicativo software, consentendone l'esecuzione a prescindere dal sistema operativo 
 in uso dall'utente. 
 \\ Docker fornisce lo strumento \textit{Compose} \cite{docker_comp}, che permette di orchestrare dei servizi singoli a più container, 
 che comunicano fra loro su una rete privata. In questo modo è possibile creare facilmente una configurazione per lo schieramento dei sistemi in fase di produzione, 
-nonché un ambiente di sviluppo avente 
-un funzionamento e struttura analoghi al sistema finale. Le caratteristiche dei container e i collegamenti fra questi
+nonché un ambiente di sviluppo avente funzionamento e struttura analoghi al sistema finale. Le caratteristiche dei container e i collegamenti fra questi
  vengono definite tramite un file di configurazione in formato YAML. 
 
 
@@ -85,10 +84,10 @@ Il sistema di autorizzazione scelto in questo lavoro usa un approccio \textit{Ro
 controllo degli accessi si basa sui diritti associati al ruolo dell'utente. 
 Altre tecniche di controllo degli accessi possono essere implementate cambiando le politiche. Nonostante ciò, 
 questo approccio risulta quello più consono alla dimostrazione delle capacità di OpenPolicyAgent.
-\\ La descrizione dei ruoli e dei permessi associati a essi è mantenuta in file in formato JSON, descritti con una sintassi illustrata nel Codice \ref*{opa_roles}.
+\\ La descrizione dei ruoli e dei permessi associati a essi è mantenuta in uno o più file in formato JSON, descritti con una sintassi illustrata nel Codice \ref*{opa_roles}.
 Ad ogni ruolo sono associate le operazioni che l'utente può svolgere.
 \lstset{language=nginx}
-\begin{lstlisting}[caption={[Descrizione dei ruoli in JSON]Descrizione dei ruoli e dei relativi permessi in formato JSON.},captionpos=b,label=opa_roles]
+\begin{lstlisting}[caption={[Descrizione dei ruoli in JSON]Descrizione dei ruoli e dei loro relativi permessi in formato JSON.},captionpos=b,label=opa_roles]
     "roles" : {
         "/dev" : [
             "retrieve", 
@@ -106,8 +105,8 @@ Ad ogni ruolo sono associate le operazioni che l'utente può svolgere.
     }
 \end{lstlisting}
 Come già citato in precedenza, le politiche in OpenPolicyAgent sono definite attraverso il linguaggio Rego. L'unità base di una policy scritta in questo linguaggio è data 
-dalla regola, che viene definita tramite una testa e un corpo contenuto in delle parentesi graffe. 
-\begin{lstlisting}[caption={[Policy in linguaggio Rego]Policy in linguaggio Rego. Il simbolo ":=" indica un assegnamento di valore, mentre "==" permette di confrontare l'uguaglianza fra i valori delle due variabili. L'indice "\_" permette di considerare tutti i valori di una dimensione di un vettore.},captionpos=b,label=opa_policy]
+dalla \textit{regola}, che viene definita tramite una testa e un corpo contenuto in delle parentesi graffe. 
+\begin{lstlisting}[caption={[Policy in linguaggio Rego]Policy in linguaggio Rego. L'operatore ``:='' indica un assegnamento di valore, mentre ``=='' permette di confrontare l'uguaglianza fra i valori delle due variabili. L'indice ``\_'' permette di considerare tutti i valori di una dimensione di un vettore.},captionpos=b,label=opa_policy]
     import input.http_method as http_method   
     default allow = false #abilita il default deny
 
@@ -120,21 +119,21 @@ dalla regola, che viene definita tramite una testa e un corpo contenuto in delle
         all_permissions == input.operation
     }
 \end{lstlisting}
-Il corpo di una regola contiene delle assegnazioni, operazioni logiche, oppure riferimenti ad altre regole. Una regola assume valore "true" 
-solo se tutte le clausole interne sono eseguibili e risultano vere, altrimenti le viene assegnata il valore "undefined". Regole aventi stessa testa ma corpo diverso presentano come valore finale 
-il risultato dato dall'OR logico fra i risultati di ciascuna di queste, con "undefined" che assume la stessa semantica di "false". 
-Le regole possono essere annidate facendo sì che il significato di una regola dipenda dal valore di un'altra, in modo da formare una politica strutturata in un'organizzazione gerarchia. 
+Il corpo di una regola contiene delle assegnazioni, operazioni logiche, oppure riferimenti ad altre regole. Una regola assume valore ``true'' 
+solo se tutte le clausole interne sono eseguibili e risultano vere, altrimenti le viene assegnata il valore ``undefined''. Regole aventi stessa testa ma corpo diverso presentano come valore finale 
+il risultato dato dall'OR logico fra i risultati di ciascuna di queste, con ``undefined'' che assume la stessa semantica di ``false''. 
+Le regole possono essere annidate facendo sì che il significato di una regola dipenda dal valore di un'altra, in modo da formare una politica strutturata gerarchicamente. 
 \\ La semplice politica mostrata nel Codice \ref*{opa_policy} è sufficiente a implementare 
 un controllo degli accessi basato su RBAC. 
-La riga 2 permette di simulare un comportamento "default deny", facendo in modo che il valore di \texttt{allow} sia uguale a "false" 
-nella situazione in cui le regole con tale testa siano "undefined".  \\ 
+La riga 2 permette di simulare un comportamento ``default deny'', facendo in modo che il valore di \texttt{allow} sia uguale a ``false'' 
+nella situazione in cui le regole con tale testa siano ``undefined''.  \\ 
 I confronti con collezioni di dati sono esprimibili in maniera concisa, come avviene nelle righe 9 e 10 del Codice \ref*{opa_policy}. 
 La variabile \texttt{all\_permission} contiene tutti i permessi del ruolo specificato nella query in input. 
-Se l'operazione svolta dall'utente risulta in questa collezione, allora il valore di \texttt{check\_permission} sarà "true". 
-Per esempio, se OPA ricevesse una query con ruolo \texttt{/dev} e operazione "report", la variabile \texttt{all\_permission} conterrà i permessi 
-"retrieve" e "submit" e il valore finale di \texttt{check\_permession} risulterebbe "undefined".
-\\ La risposta restituita al componente che ha interrogato OPA consiste in un file in formato JSON contenente il valore 
-delle regole alle radici dell'albero gerarchico, oppure di tutte le regole che hanno portato le radici ad avere un valore undefined. 
+Se l'operazione svolta dall'utente risulta in questa collezione, allora il valore della regola sarà ``true''. 
+Per esempio, se OPA ricevesse una query con ruolo \texttt{/dev} e operazione ``report'', la variabile \texttt{all\_permission} conterrà i permessi 
+``retrieve'' e ``submit'' e il valore finale di \texttt{check\_permession} risulterebbe ``undefined''.
+\\ La risposta restituita al componente che ha interrogato OPA consiste in un messaggio in formato JSON contenente il valore 
+delle regole alle radici dell'albero gerarchico, oppure di tutte le regole che hanno portato le radici ad avere valore ``undefined''. 
 
 
 \subsection{Reverse proxy}
@@ -144,7 +143,7 @@ del reverse proxy.
 i diritti di accesso. 
 
 \lstset{language=nginx}
-\begin{lstlisting}[caption={[Frammento di codice principale del reverse proxy]Frammento di codice principale del reverse proxy. La locazione \texttt{/authz} gestisce e invia la richiesta a 
+\begin{lstlisting}[caption={[Frammento di codice del reverse proxy]Frammento di codice del reverse proxy. La locazione \texttt{/authz} gestisce e invia la richiesta a 
     OPA, e in base alla sua risposta inoltra la richiesta o meno attraverso la keyword \texttt{proxy\_pass}.},captionpos=b,label=nginx_rp]
     # operazione protetta
     location /operation {
@@ -163,14 +162,20 @@ i diritti di accesso.
         # sposta la gestione al modulo NJS  
         js_content auth_engine.authorize_operation;
     }
+
+    # locazione dedicata all'invio dei dati a OPA
+    location /_opa {
+        internal; 
+        proxy_pass http://opa:8181/;
+    }
 \end{lstlisting}
 Una qualsiasi richiesta che accede a un endpoint avente prefisso \texttt{/operation} induce il reverse proxy a controllare 
 se l'utente possiede effettivamente l'autorizzazione ad accedere a tale servizio. Possiamo interpretare la locazione \texttt{/operation}
 come quella associata alle risorse protette, che richiedono un controllo dell'accesso. 
-\\ Attraverso il comando \texttt{auth\_request /authz},
+\\ Attraverso il comando \texttt{auth\_request /authz} alla riga 4 del Codice \ref*{nginx_rp},
 il flusso di esecuzione passa immediatamente al codice associato all'endpoint \texttt{/authz}. 
 In questa fase, la richiesta HTTP viene condotta nel modulo NJS dedicato alla creazione della query e alla trasmissione di essa verso il sistema delle politiche.
-La riga 18 del Codice \ref*{nginx_rp} invoca questa funzionalità. \\
+La riga 16 del Codice \ref*{nginx_rp} invoca questa funzionalità. \\
 Il modulo NJS contiene il metodo \texttt{authorize\_operation}, che raccoglie le informazioni dagli header 
 e le trascrive in formato JSON.
 I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoint \texttt{/\_opa}, 
@@ -196,7 +201,7 @@ I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoin
     
             var body = JSON.parse(opa_res.responseText);
             
-            // se body non c'e' o allow e' 
+            // se il body non c'e' o allow e' 
             // uguale a false, ritorna forbidden (403)
             if (!body || !body.allow) {
                 r.return(403);
@@ -211,9 +216,9 @@ I dati sono quindi inseriti in un pacchetto HTTP, che verrà inviato all'endpoin
 \end{lstlisting}
 In base alla risposta del sistema di politiche, il reverse proxy inoltrerà il pacchetto originale al servizio applicativo con la keyword \texttt{proxy\_pass}, 
 oppure terminerà la gestione della richiesta.
-La parola chiave \texttt{internal} alle righe 10 e 23 del Codice \ref{nginx_rp}  garantisce che le locazioni 
+La parola chiave \texttt{internal} alle righe 10 e 21 del Codice \ref{nginx_rp} garantisce che le locazioni 
 associate all'interrogazione di OpenPolicyAgent possano essere accedute esclusivamente da sottorichieste interne al reverse proxy. 
-\\ L'uso di un modulo esterno è necessario perché la clausola \texttt{auth\_request} scarta il campo body della 
+\\ L'uso di un modulo esterno è necessario poiché la clausola \texttt{auth\_request} scarta il campo body della 
 richiesta HTTP. Ciò implica che non è possibile inviare una richiesta contenente i dati della query nel suo corpo.
 Dunque, è essenziale l'aggiunta di un livello di indirezione che converta gli header HTTP in dati in formato
 JSON comprensibili da OPA. 
@@ -226,7 +231,7 @@ Siccome questa fase del progetto si focalizza sullo sviluppo corretto dei compon
 al filtraggio delle richieste, il servizio applicativo è dato da una API relativamente elementare. \\
 L'API in questione ritorna una risposta generica con Status Code 200 se si accede correttamente all'endpoint \texttt{/operation}, 
 mentre una richiesta a \texttt{/operation/image\_request} permette lo scaricamento di 
-un'immagine. Siccome queste locazioni presentano il prefisso "operation", il loro accesso comporta l'uso 
+un'immagine. Siccome queste locazioni presentano il prefisso ``operation'', il loro accesso comporta l'uso 
 del sistema di autorizzazione.  
 \\La modalità web server di NGINX permette di implementare quanto appena descritto.
 \lstset{language=nginx}
@@ -241,15 +246,14 @@ del sistema di autorizzazione.
         try_files $uri /test.jpg;
     }
 \end{lstlisting}
-La clausola \texttt{return} invia al client uno specifico HTTP Status Code,  
 Questa scelta ha facilitato lo sviluppo, permettendo di definire in poche righe di codice una API funzionante e adatta ai requisiti,  
 come si può vedere nel Codice \ref*{nginx_web}.
 
 \section{Cifratura SSL/TLS}
-Spesso un sistema di autorizzazione richiede delle informazioni sensibili riguardo un utente per attuare il controllo 
+Spesso un sistema di autorizzazione richiede a un utente delle informazioni sensibili per attuare il controllo 
 degli accessi. 
 Per proteggere il flusso dati da possibili intercettazioni è opportuno che la comunicazione fra il servizio e l'utente venga cifrata. 
-\\ Il protocollo più popolare che mette in sicurezza un collegamento \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmetrica. Il suo funzionamento necessita 
+\\ Il protocollo standard per la sicurezza delle comunicazioni in rete \newline è \textit{SSL/TLS}, che si basa sulla cifratura a chiave asimmetrica. Il suo funzionamento necessita 
 dei certificati X.509 \cite{x509_rfc}, che garantiscono che la chiave pubblica di un host appartenga effettivamente a esso. 
 \\ Nel caso del progetto di questa tesi, solamente la connessione fra il reverse proxy e l'utente deve essere protetta, siccome nessun agente esterno
  all'infrastruttura possiede accesso diretto ai componenti.
@@ -265,7 +269,7 @@ NGINX supporta le connessioni SSL/TLS attraverso alcune configurazioni esplicite
         ...
     }
 \end{lstlisting}
-L'impostazione del canale protetto attraverso NGINX avviene inserendo il parametro \texttt{ssl} nella definizione 
+L'impostazione in NGINX del canale protetto avviene inserendo il parametro \texttt{ssl} nella definizione 
 dei socket in ascolto del server. Il percorso del certificato pubblico e della chiave privata devono essere specificati 
 rispettivamente nelle direttive \texttt{ssl\_certificate} e \texttt{ssl\_certificate\_key}. \\
 Il Codice \ref*{nginx_ssl} mostra il setup della protezione SSL/TLS all'interno del reverse proxy del sistema di autorizzazione.
@@ -276,7 +280,7 @@ con una controparte ufficialmente verificata è un processo banale.
 \raggedbottom  
 \section{Testing}
 L'intera infrastruttura prende vita avviando i container di Docker Compose attraverso il comando \texttt{docker-compose up}.
-Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenti nel proprio header le informazioni necessarie per formulare una query.
+Per testare il sistema, è possibile inviare dei pacchetti HTTP al reverse proxy contenenti nel proprio header le informazioni necessarie per formulare una query.
 \\ \textit{cURL} (o curl) \cite{curl} è il software principale usato in ambito di testing, siccome permette di inviare dati attraverso 
 numerosi protocolli, tra cui anche HTTP. 
-\\ Questo metodologia è stata applicata in continuità durante lo sviluppo dell'intero progetto. 
+\\ Questa metodologia è stata applicata in continuità durante lo sviluppo dell'intero progetto. 

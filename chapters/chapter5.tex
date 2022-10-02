@@ -35,7 +35,7 @@ si ottiene inviando una richiesta con metodo \texttt{DELETE} all'endpoint \textt
   \texttt{ARCHIVEINFO} & Richiede informazioni riguardo il progresso della scrittura dei file su nastro. \\ 
   \hline
 \end{tabular}
-\caption{\label{tab:table-name} Insieme delle operazioni fornite dalla specifica WLCG Tape REST API.}
+\caption{\label{tab:table-name}Insieme delle operazioni fornite dalla specifica WLCG Tape REST API.}
 \end{center}
 \end{table}
 
@@ -43,21 +43,21 @@ si ottiene inviando una richiesta con metodo \texttt{DELETE} all'endpoint \textt
 L'interfacciamento del sistema con il servizio richiede delle alterazioni alla configurazione del reverse proxy. In particolare, 
 il modulo NJS adibito all'invio delle informazioni a OpenPolicyAgent deve analizzare l'endpoint e il metodo della richiesta per 
 determinare il tipo di operazione che l'utente sta svolgendo.
-\\ La prima modifica consiste nel cambiamento della location "protetta", che porta a un controllo dell'accesso, 
+\\ La prima modifica consiste nel cambiamento della location ``protetta'' che porta a un controllo dell'accesso, 
 facendo sì che rifletta la locazione associata all'API di StoRM-Tape.  
 \\ Il metodo HTTP e l'URI della richiesta sono reperibili attraverso delle variabili built-in di NGINX e assegnabili 
 a delle variabili generiche, in modo simile a quanto svolto
-nel Codice \ref*{nginx_var} per l'estrazione delle informazioni dai VOMS Proxy. In questo modo, è possibile accedere ai due dati dal modulo NJS,
- e possono essere utilizzati per stabilire il carattere dell'operazione richiesta dall'utente. Il processo di creazione della query e il suo invio al
+nel Codice \ref*{nginx_var} per l'estrazione delle informazioni dai VOMS Proxy. In questo modo, il modulo NJS potrà accedere ai due dati,
+ che permettono di stabilire il carattere dell'operazione richiesta dall'utente. Il processo di creazione della query e il suo invio al
   sistema delle politiche rimane inalterato dal modulo originale. 
 \\ Le regole delle politiche di OPA non richiedono modifiche, purché si voglia mantenere un controllo degli accessi basato su RBAC. Ciò implica che è possibile usare JWT e VOMS Proxy 
 per autorizzare il client, senza l'aggiunta di ulteriori funzioni. 
-\\ Nonostante ciò, il database contenente le informazioni sui ruoli deve essere riscritto in modo da essere coerente con 
+\\ Va da sé che il database contenente le informazioni sui ruoli deve essere riscritto in modo da essere coerente con 
 le funzionalità che fornisce StoRM-Tape. 
 
 \subsection{Risultati}
 Le modifiche richieste per proteggere il servizio tramite il sistema di autorizzazione sono poche e 
-non influenzano in modo significativo le politiche. Questo fatto dimostra la versatilità del sistema, 
+non influenzano in modo significativo le politiche d'accesso. Questo fatto dimostra la versatilità del sistema, 
 siccome richiede poche alterazioni per essere compatibile con un servizio di carattere molto diverso 
 da quello iniziale.   
 

@@ -8,7 +8,7 @@ nel contesto in cui ci si trova.
     \item la \textit{manutenibilità}, ovvero la facilità di apportare modifiche a sistema realizzato.
 \end{itemize}
 La prima è garantita attraverso la divisione in più componenti, cosicché modificare le regole di accesso non richieda
-un'alterazione del codice del complesso. 
+un'alterazione generale del codice del complesso. 
 \\ La seconda è ottenuta tramite la separabilità totale dal servizio che si intende proteggere,
  facilitandone la compatibilità con altre tecnologie.  
 \\ Un'altra considerazione che ha influenzato l'architettura del sistema è stata la scelta del software per la gestione 
@@ -22,7 +22,7 @@ L'architettura dell'infrastruttura presenta uno scheletro formato da tre compone
     \item il \textit{reverse proxy}
     \item il \textit{servizio applicativo}
 \end{itemize}
-Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tuttavia solo le prime due influenzano il processo di autorizzazione. 
+Ciascuna di esse veste un ruolo importante nella gestione della richiesta, tuttavia solamente le prime due influenzano il processo di autorizzazione. 
 
 \subsection{Sistema delle politiche di accesso}
 Il sistema delle politiche di accesso è la parte che determina come la richiesta dovrà essere gestita. 
@@ -38,7 +38,7 @@ il reverse proxy prima di giungere al server.
 \\ L'attraversamento del proxy è trasparente: al client apparirà di comunicare direttamente con il servizio, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
 \\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene effettivamente espresso il concetto di autorizzazione. 
 Infatti, il reverse proxy inoltra o ignora le richieste al servizio applicativo, basandosi sull'output del sistema delle politiche di accesso.  
-\\ Il termine "reverse" permette di distinguerlo dai normali proxy d'inoltro, che interfacciano un client con l'esterno di una rete locale.
+\\ Il termine ``reverse'' permette di distinguerlo dai normali proxy d'inoltro, che interfacciano un client con l'esterno di una rete locale.
  Un reverse proxy, invece, viene posto nella comunicazione fra un server e i client provenienti da una rete esterna. 
  
 
