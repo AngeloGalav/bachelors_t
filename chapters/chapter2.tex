@@ -3,9 +3,9 @@ Durante la progettazione di un sistema di autorizzazione, è necessario consider
 nel contesto in cui ci si trova.
 \\ Quelli che hanno contribuito maggiormente sulle scelte progettuali sono stati:
 \begin{itemize}
-    \item la versatilità, cioè la capacità di interfacciarsi con sistemi di 
+    \item la \textit{versatilità}, cioè la capacità di interfacciarsi con sistemi di 
     funzionalità e struttura diversa.
-    \item la manutenibilità, ovvero la facilità di apportare modifiche a sistema realizzato.
+    \item la \textit{manutenibilità}, ovvero la facilità di apportare modifiche a sistema realizzato.
 \end{itemize}
 La prima è garantita attraverso la divisione in più componenti, cosicché modificare le regole di accesso non richieda
 un'alterazione del codice del complesso. 
@@ -38,8 +38,8 @@ il reverse proxy prima di giungere al server.
 \\ L'attraversamento del proxy è trasparente: al client apparirà di comunicare direttamente con il servizio, nonostante le richieste siano dirette al proxy e da esso propriamente gestite. 
 \\ La mediazione fornita da questo elemento incorpora un aspetto decisionale, attraverso il quale viene effettivamente espresso il concetto di autorizzazione. 
 Infatti, il reverse proxy inoltra o ignora le richieste al servizio applicativo, basandosi sull'output del sistema delle politiche di accesso.  
-\\ Il termine "reverse" permette di distinguerlo dai normali proxy d'inoltro, che interfacciano un client con una rete senza necessariamente esaminare il pacchetto in uscita 
-o in entrata. Un reverse proxy, invece, viene posto nella comunicazione fra un server e i client che cercano di accedervi, applicando un controllo degli accessi. 
+\\ Il termine "reverse" permette di distinguerlo dai normali proxy d'inoltro, che interfacciano un client con l'esterno di una rete locale.
+ Un reverse proxy, invece, viene posto nella comunicazione fra un server e i client provenienti da una rete esterna. 
  
 
 \subsection{Servizio applicativo} \label{serv_server}

@@ -7,14 +7,13 @@ della parte operativa, attraverso l'illustrazione di frammenti di codice signifi
 Con \textit{software stack} si intende l'insieme di sottosistemi software che permettono di realizzare una piattaforma completa.
 Questi lavorano assieme per consentire la corretta esecuzione di un'applicazione oppure, come nel caso in questione, il 
 funzionamento di un sistema.
-Lo stack dell'infrastruttura è composto dai seguenti software:
+Lo stack dell'infrastruttura è composto dai seguenti software, che saranno descritti nei paragrafi successivi:
 \begin{itemize}
     \item OpenPolicyAgent
     \item NGINX
     \item Docker
 \end{itemize}
-che saranno descritti nei paragrafi successivi.
-\\ Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolgere il proprio compito. 
+Ogni componente dell'infrastruttura sfrutta lo stack in modo diverso per svolgere il proprio compito. 
 
 
 \subsection{OpenPolicyAgent}
@@ -22,8 +21,8 @@ che saranno descritti nei paragrafi successivi.
  decision-making  dall'applicazione rigorosa delle politiche.
 \\ Ad esempio, consideriamo un servizio che richiede di stabilire se un utente possiede dei determinati diritti di accesso.
 OPA permette di gestire il problema decisionale del controllo dell'accesso analizzando le informazioni su di esso, ricevute attraverso un'interrogazione da parte del servizio. 
-In questo modo, l'applicazione delle politiche di accesso viene dunque delegata a un componente singolo, che potrà essere interrogato da più 
-agenti.\\ Il principale vantaggio di un'organizzazione di questo tipo consiste nell'eliminazione di eventuali ambiguità
+In questo modo, l'applicazione delle politiche di accesso viene delegata a un componente singolo, che potrà essere interrogato da più 
+agenti.\\ Il principale vantaggio di una struttura di questo tipo consiste nell'eliminazione di eventuali ambiguità
  causate dall'implementazione del controllo degli accessi in ciascun elemento del sistema. 
 \begin{figure}[h]
     \includegraphics[height=6cm]{opa-service.jpg}
@@ -32,23 +31,23 @@ agenti.\\ Il principale vantaggio di un'organizzazione di questo tipo consiste n
     \label{OPAWork}
 \end{figure} 
 La Figura \ref*{OPAWork} mostra in modo schematico la gestione tipica di una richiesta: un servizio invia un'interrogazione
- e OPA valuta i dati a sua disposizione per formulare una decisione e restituirla. 
-Le informazioni della richiesta sono definiti in formato JSON, tuttavia sono strutturate in modo totalmente arbitrario. 
+ a OPA che in base ai dati a sua disposizione formula una decisione e la restituisce al servizio stesso. 
+Le informazioni della richiesta sono definite in formato JSON, e sono strutturate in modo totalmente arbitrario. 
 \\ Le politiche (o policy) devono essere rappresentate attraverso il linguaggio dichiarativo 
 \textit{Rego} \cite{rego_doc}, la cui sintassi si ispira al linguaggio 
 di interrogazione \textit{Datalog}. 
-Attraverso Rego, le regole si esprimono come delle asserzione sui dati mantenuti da OPA.
-Il codice dedicato alle politiche diventa così molto conciso rispetto a un loro equivalente in 
+Attraverso Rego, le regole sono espresse come delle asserzione sui dati mantenuti da OPA.
+Il codice dedicato alle politiche diventa così molto conciso rispetto a un equivalente in 
 linguaggio imperativo. 
-\\ Un'altra funzionalità molto interessante di questo software sta nella REST API CRUD fornita da OpenPolicyAgent per la gestione delle politiche \cite{opa_api}. In questo modo, una politica può essere modificata o inserita 
+\\ Un'altra funzionalità molto interessante di questo software risiede nella REST API CRUD fornita da OpenPolicyAgent per la gestione delle politiche \cite{opa_api}. Grazie a questa, una politica può essere modificata o inserita 
 in qualsiasi momento tramite una richiesta all'API. Nel sistema di autorizzazione implementato in questa tesi, il servizio API non è stato abilitato. 
-\\ OpenPolicyAgent è il software che gestisce interamente il sistema delle politiche di accesso. Oltre a formulare una decisione,
- infatti, coordina la ricezione delle informazioni e la trasmissione del risultato.  
+\\ OpenPolicyAgent è il software che gestisce interamente il sistema delle politiche di accesso. Infatti, oltre a formulare una decisione, 
+coordina la ricezione delle informazioni e la trasmissione del risultato.  
 
 
 \subsection{NGINX}
 \textit{NGINX} \cite{nginx_bib} è un web server che incorpora numerose funzionalità, che facilitano l'impostazione del reverse proxy e del servizio applicativo. 
-È conosciuto per la sua stabilità, semplicità di configurazione, estensibilità e consumo di risorse molto basso, infatti:
+È conosciuto per la sua stabilità, semplicità di configurazione, estensibilità e consumo di risorse molto basso. Infatti:
 \begin{itemize}
     \item 
     Contrariamente ai server tradizionali,  
@@ -85,7 +84,7 @@ Il sistema di autorizzazione scelto in questo lavoro usa un approccio \textit{Ro
 controllo degli accessi si basa sui diritti associati al ruolo dell'utente. 
 Altre tecniche di controllo degli accessi possono essere implementate cambiando le politiche. Nonostante ciò, 
 questo approccio risulta quello più consono alla dimostrazione delle capacità di OpenPolicyAgent.
-\\ La descrizione dei ruoli e dei permessi associati a essi è mantenuta in file in formato JSON, descritti come nel Codice \ref*{opa_roles}.
+\\ La descrizione dei ruoli e dei permessi associati a essi è mantenuta in file in formato JSON, descritti con una sintassi illustrata nel Codice \ref*{opa_roles}.
 Ad ogni ruolo sono associate le operazioni che l'utente può svolgere.
 \lstset{language=nginx}
 \begin{lstlisting}[caption={[Descrizione dei ruoli in JSON]Descrizione dei ruoli e dei relativi permessi in formato JSON.},captionpos=b,label=opa_roles]
@@ -128,17 +127,19 @@ Le regole possono essere annidate facendo sì che il significato di una regola d
 un controllo degli accessi basato su RBAC. 
 La riga 2 permette di simulare un comportamento "default deny", facendo in modo che il valore di \texttt{allow} sia uguale a "false" 
 nella situazione in cui le regole con tale testa siano "undefined".  \\ 
-I confronti con collezioni di dati sono esprimibili in maniera concisa, come avviene nelle righe 9 e 10 del Codice \ref*{opa_policy}.
+I confronti con collezioni di dati sono esprimibili in maniera concisa, come avviene nelle righe 9 e 10 del Codice \ref*{opa_policy}. 
 La variabile \texttt{all\_permission} contiene tutti i permessi del ruolo specificato nella query in input. 
 Se l'operazione svolta dall'utente risulta in questa collezione, allora il valore di \texttt{check\_permission} sarà "true". 
+Per esempio, se OPA ricevesse una query con ruolo \texttt{/dev} e operazione "report", la variabile \texttt{all\_permission} conterrà i permessi 
+"retrieve" e "submit" e il valore finale di \texttt{check\_permession} risulterebbe "undefined".
 \\ La risposta restituita al componente che ha interrogato OPA consiste in un file in formato JSON contenente il valore 
 delle regole alle radici dell'albero gerarchico, oppure di tutte le regole che hanno portato le radici ad avere un valore undefined. 
 
 
 \subsection{Reverse proxy}
-La scelta di inserire NGINX nel software stack è stata decisamente influenzata dagli strumenti che possiede per la realizzazione 
+La scelta di inserire NGINX nel software stack è stata fortemente influenzata dagli strumenti che possiede per la realizzazione 
 del reverse proxy. 
-\\ Tra questi, NGINX fornisce la clausola \texttt{auth\_request} per fare appello a un sistema di decision-making in modo da valutare
+\\ Tra questi, NGINX fornisce la clausola \texttt{auth\_request} che permette di fare appello a un sistema di decision-making in modo da valutare
 i diritti di accesso. 
 
 \lstset{language=nginx}
@@ -218,7 +219,7 @@ JSON comprensibili da OPA.
 
 
 \subsection{Servizio applicativo}
-Come descritto nella Sezione \ref*{serv_server}, con servizio applicativo si intende un servizio qualsiasi che usufruire in modo trasparente 
+Come descritto nella Sezione \ref*{serv_server}, con servizio applicativo si intende un servizio qualsiasi che usufruisce in modo trasparente 
 dell'infrastruttura di autorizzazione. 
 Siccome questa fase del progetto si focalizza sullo sviluppo corretto dei componenti dedicati 
 al filtraggio delle richieste, il servizio applicativo è dato da una API relativamente elementare. \\

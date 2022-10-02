@@ -88,7 +88,7 @@ per conto di questa. I certificati possiedono lo stesso formato di un certificat
 \\ Altre informazioni provenienti da questi certificati sono:
 \begin{itemize}
     \item I \textit{Fully Qualified Attribute Names} (FQAN), ovvero delle stringhe di testo che indicano il ruolo di ogni utente nel gruppo e nei suoi sottogruppi. 
-    \item Informazioni riguardo il certificato dell'utente e dell'ac, tra cui nazione e stato di origine, organizzazione e common name.   
+    \item Informazioni riguardo il certificato dell'utente e dell'AC, tra cui nazione e stato di origine, organizzazione e common name.   
 \end{itemize}
 L'esteso set disponibile di informazioni che è possibile associare a ciascun utente permette di fornire
  una notevole flessibilità e specificità nella progettazione delle regole del controllo degli accessi. 
@@ -96,15 +96,15 @@ L'esteso set disponibile di informazioni che è possibile associare a ciascun ut
 il sistema di autorizzazione utilizzato nei grid computazionali. 
 
 \subsection{Generazione dei certificati VOMS Proxy}
-Il processo di generazione di un VOMS Proxy richiede l'applicazione \textit{VOMS Clients}, che contatta un'organizzazione virtuale per ricevere un attribute 
+Il processo di generazione di un VOMS Proxy richiede l'applicazione \textit{VOMS Clients} \cite{VOMS_client}, che contatta un'organizzazione virtuale per ricevere un attribute 
 certificate, e lo inserisce in una copia della chiave pubblica dell'utente. Tutto ciò avviene attraverso l'uso del comando \texttt{voms-proxy-init}. 
 \\Il servizio VOMS fornisce una VO associata al testing dei servizi, chiamata test.vo. I certificati usati durante lo sviluppo 
-dell'integrazione a VOMS Proxy presentano un AC associato a questa VO e presentano un tempo di validità di 24 ore.   
+dell'integrazione a VOMS Proxy presentano un AC associato a questa VO e hanno un tempo di validità di 24 ore.   
 
 \subsection{Integrazione dei VOMS Proxy}
 L'integrazione del supporto all'autorizzazione tramite certificati VOMS Proxy comporta la riconfigurazione del reverse proxy.
 \\ La sezione di Software Development dell'INFN CNAF ha sviluppato una patch di NGINX \cite{voms_nginx} per introdurre un modulo che estrae automaticamente le informazioni dai VOMS Proxy.
- Il modulo viene chiamato ogni volta che il flusso di esecuzione del reverse proxy incontra una variabile di VOMS.
+ Il modulo viene invocato ogni volta che il flusso di esecuzione del reverse proxy incontra una variabile di VOMS.
 \\ Grazie a questa estensione, lo sviluppo del supporto ai certificati VOMS consiste principalmente nell'inserimento da parte del reverse proxy 
 delle informazioni estratte dal certificato in variabili interne a NGINX. 
 
