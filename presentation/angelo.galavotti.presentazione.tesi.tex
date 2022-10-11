@@ -2,8 +2,12 @@
 \usepackage[utf8]{inputenc}
 \setbeamertemplate{navigation symbols}{}
 
-\usetheme{Madrid}
+\useoutertheme{infolines}
+\usetheme{Frankfurt}
 \usecolortheme{default}
+\definecolor{ao(english)}{rgb}{0.0, 0.5, 0.0}
+
+\graphicspath{ {../images/} }
 
 %------------------------------------------------------------
 %This block of code defines the information to appear in the
@@ -21,8 +25,8 @@ Correlatore: Francesco Giacomini}
 
 \institute[] % (optional)
 {
-  Corso di Informatica\\
-  Università di Bologna, Scuola di Scienze
+  Corso di Laurea in Informatica\\
+  Alma Mater Studiorum Università di Bologna
 }
 
 \date[12 Ottobre 2022] % (optional)
@@ -30,22 +34,6 @@ Correlatore: Francesco Giacomini}
 
 %End of title page configuration block
 %------------------------------------------------------------
-
-
-
-%------------------------------------------------------------
-%The next block of commands puts the table of contents at the 
-%beginning of each section and highlights the current section:
-
-\AtBeginSection[]
-{
-  \begin{frame}
-    \frametitle{Table of Contents}
-    \tableofcontents[currentsection]
-  \end{frame}
-}
-%------------------------------------------------------------
-
 
 \begin{document}
 
@@ -57,25 +45,28 @@ Correlatore: Francesco Giacomini}
 %This block of code is for the table of contents after
 %the title page
 \begin{frame}
-\frametitle{Table of Contents}
+\frametitle{Sommario}
 \tableofcontents
 \end{frame}
 %---------------------------------------------------------
 
 
-\section{First section}
+\section{Introduzione}
 
 %---------------------------------------------------------
 %Changing visivility of the text
 \begin{frame}
-\frametitle{Sample frame title}
-This is a text in second frame. For the sake of showing an example.
+\frametitle{Background}
 
 \begin{itemize}
-    \item<1-> Text visible on slide 1
-    \item<2-> Text visible on slide 2
-    \item<3> Text visible on slides 3
-    \item<4-> Text visible on slide 4
+  \item Il Worldwide LHC Computing Grid (\textbf{WLCG}) è una collaborazione mondiale di \textbf{centri di calcolo}
+  finalizzata all'\textbf{analisi} e all'\textbf{elaborazione} dei dati generati dall'\textbf{acceleratore di particelle} del \textbf{CERN} di Ginevra.
+  \\~\
+  \item Uno di questi centri di calcolo è situato alla sede CNAF di Bologna dell'INFN, e si occupa
+   anche dello \textbf{sviluppo del middleware} dell'infrastruttura \textbf{WLCG}.
+   \\~\ 
+  \item Molte componenti di tale middleware necessitano di un \textbf{sistema di autorizzazione}. 
+
 \end{itemize}
 \end{frame}
 
@@ -85,62 +76,139 @@ This is a text in second frame. For the sake of showing an example.
 %---------------------------------------------------------
 %Example of the \pause command
 \begin{frame}
-In this slide \pause
-
-the text will be partially visible \pause
-
-And finally everything will be there
+  \frametitle{Obiettivo}
+  L'obiettivo del progetto consiste nella creazione di un PoC di un \textbf{sistema di autorizzazione} che sia \textbf{versatile} e \textbf{compatibile} 
+  con i \textbf{metodi di autenticazione} attualmente adottati dal WLCG.
 \end{frame}
 %---------------------------------------------------------
 
-\section{Second section}
+\section{Implementazione del sistema}
 
 %---------------------------------------------------------
 %Highlighting text
 \begin{frame}
-\frametitle{Sample frame title}
-
-In this slide, some important text will be
-\alert{highlighted} because it's important.
-Please, don't abuse it.
-
-\begin{block}{Remark}
-Sample text
-\end{block}
-
-\begin{alertblock}{Important theorem}
-Sample text in red box
-\end{alertblock}
-
-\begin{examples}
-Sample text in green box. The title of the block is ``Examples".
-\end{examples}
-\end{frame}
-%---------------------------------------------------------
-
-
-%---------------------------------------------------------
-%Two columns
-\begin{frame}
-\frametitle{Two-column slide}
-
-\begin{columns}
-
-\column{0.5\textwidth}
-This is a text in first column.
-$$E=mc^2$$
+\frametitle{Struttura}
+L'infrastruttura presenta tre componenti principali, ciascuno in esecuzione all'interno di un container \textbf{Docker}:
 \begin{itemize}
-\item First item
-\item Second item
+  \item \textbf{Sistema delle politiche di accesso}
+  \item \textbf{Reverse proxy}
+  \item \textbf{Servizio applicativo}
 \end{itemize}
 
-\column{0.5\textwidth}
-This text will be in the second column
-and on a second tought this is a nice looking
-layout in some cases.
-\end{columns}
-\end{frame}
-%---------------------------------------------------------
+La separazione in componenti permette di \textbf{evitare ambiguità} durante il controllo degli accessi e di garantire la \textbf{manutenibilità}. 
 
+\begin{figure}[h]
+  \includegraphics[width=8cm]{topologia.png}
+  \centering
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{OpenPolicyAgent}
+  \begin{itemize}
+    \item \textbf{OpenPolicyAgent} è il sottosistema software alla base del \textbf{sistema delle politiche} di accesso.
+    \item È un \textbf{policy engine} che permette l'\textbf{applicazione di politiche} e regole scritte in linguaggio Rego.
+    \item Le regole implementate in questo progetto attuano un \textbf{modello RBAC} per il controllo degli accessi.
+  \end{itemize}  
+  
+  \begin{figure}[h]
+    \includegraphics[width=6cm]{opa-service.jpg}
+    \centering
+  \end{figure}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{NGINX}
+  \begin{itemize}
+    \item \textbf{NGINX} è il software utilizzato per l'implementazione del \textbf{reverse proxy} e del \textbf{servizio applicativo}.
+    \item È conosciuto per la sua \textbf{stabilità}, \textbf{efficienza} e \textbf{semplicità} di configurazione.
+    \item Contiene direttive built-in che facilitano l'implementazione del reverse proxy e l'\textbf{interrogazione del sistema delle politiche} di accesso. 
+    \item Le sue funzionalità possono essere estese tramite la scrittura di \textbf{procedure} in \textbf{linguaggio NJS}. 
+  \end{itemize}  
+  
+  \begin{figure}[h]
+    \includegraphics[width=4cm]{NGINX-logo.png}
+    \centering
+  \end{figure}
+  
+\end{frame}
+
+\section[Autenticazione]{Gestione dei metodi di autenticazione}
+
+\begin{frame}
+  \frametitle{Gestione dei metodi di autenticazione}
+  \begin{itemize}
+    \item Un requisito chiave del sistema è la compatibilità con i \textbf{metodi di autenticazione} attualmente adottati dal \textbf{WLCG}.
+    \\~\
+    \item Le procedure di autenticazione del WLCG sono in \textbf{fase di transizione}:
+    \begin{itemize}
+      \item 
+      attualmente si basano su \textbf{certificati VOMS Proxy} ed evolveranno verso l'uso di \textbf{JSON Web Token}. \\~\
+    \end{itemize}
+    
+    \item È necessario che il PoC sia compatibile con entrambi i metodi. 
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{JSON Web Token}
+  \begin{itemize}
+    \item I JSON Web Token (\textbf{JWT}) definiscono un metodo \textbf{compatto} e \textbf{sicuro} per la trasmissione di dati
+     in \textbf{formato JSON}.
+    \item Sono alla base dallo standard \textbf{OpenID Connect}, basato sul protocollo di autorizzazione \textbf{OAuth 2.0}. 
+    \item Si definiscono come una stringa di caratteri, in cui si riconoscono \textbf{tre parti separate da un punto}. 
+  \end{itemize}  
+  \hfill
+  \centerline{\texttt{\textcolor{ao(english)}{[header]}.\textcolor{red}{[payload]}.\textcolor{blue}{[signature]}}}
+  \begin{itemize}
+    \item OpenPolicyAgent fornisce delle \textbf{funzioni built-in} per la decodifica e la verifica dei JWT. 
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Certificati proxy VOMS}
+  \begin{itemize}
+    \item I certificati \textbf{VOMS Proxy} hanno lo stesso formato di un certificato \textbf{X.509}, ma aggiungono il campo \textbf{Attribute Certificate}.
+    \item Questo campo contiene il certificato di una \textbf{Virtual Organization} (VO), in modo da poter \textbf{delegare} ad essa le operazioni da svolgere. 
+    \\~\
+    \item È disponibile un \textbf{modulo di NGINX} per l'\textbf{estrazioni dei dati} da un VOMS Proxy. 
+  \end{itemize} 
+  
+\end{frame}
+
+\section[Storm-Tape]{Interfacciamento con StoRM-Tape}
+\begin{frame}
+  \frametitle{StoRM-Tape}
+\begin{itemize}
+  \item Per dimostrare le qualità del PoC, si è deciso di \textbf{interfacciare} il sistema con un \textbf{componente middleware} attualmente in sviluppo al CNAF.  
+  \\~\
+  \item \textbf{StoRM-Tape} è un'implementazione della specifica della WLCG Tape REST API, che offre
+  un'\textbf{interfaccia comune} per la gestione della \textbf{residenza dei dati} mantenuti negli \textbf{storage} dei grid computazionali.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Interfacciamento}
+   Le \textbf{modifiche} necessarie per interfacciare il sistema con StoRM-Tape sono \textbf{minime}: \\~\
+  \begin{itemize}
+    \item \textbf{Modifica dei permessi} in modo che siano correlate con le funzionalità offerte da StoRM-Tape. \\~\
+    \item \textbf{Ridenominazione} degli \textbf{endpoint} nel \textbf{reverse proxy} in modo che coincidano che quelle dell'API. 
+  \end{itemize}
+\end{frame}
+
+
+
+\section[Conclusioni]{Conclusioni e sviluppi futuri}
+\begin{frame}
+  \frametitle{Conclusioni e sviluppi futuri}
+  Il PoC realizzato \textbf{soddisfa tutti i requisiti} e si interfaccia con servizi di diverso carattere in modo \textbf{trasparente}, richiedendo \textbf{poche modifiche}. 
+  \\ Alcune possibili evoluzioni:
+\begin{itemize}
+  \item Possibilità di \textbf{modificare le policy} collegandosi dall'\textbf{esterno} dell'infrastruttura.
+  \item Modifica delle regole per permettere un controllo degli accessi \textbf{capability-based}.
+  \item Variazione delle topologia in modo che il \textbf{servizio applicativo} possa comunicare \textbf{direttamente} con \textbf{OpenPolicyAgent}. 
+\end{itemize}
+\end{frame}
 
 \end{document}
