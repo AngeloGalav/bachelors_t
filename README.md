@@ -6,4 +6,4 @@ You can find the first part of the actual thesis code @ the repository [NGINX-OP
 The rest of the code (VOMS4NOA part + StoRM Tape integration) will be released once I'll make sure to clean the repos of all sensitive data.  
 
 ### Latex Template
-The Latex template for the thesis text is heavily inspired by [Matteo Biondi's thesis](https://github.com/mattiabiondi/baccalaureus). Please, thank him on my behalf if you have the chance! 
+The Latex template for the thesis text is heavily inspired by [Mattia Biondi's thesis](https://github.com/mattiabiondi/baccalaureus). Please, thank him on my behalf if you have the chance! 
